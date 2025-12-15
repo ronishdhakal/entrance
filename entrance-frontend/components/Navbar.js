@@ -1,0 +1,165 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { isAuthenticated, getCurrentUser, logout } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+
+export default function Navbar() {
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      const loggedIn = isAuthenticated();
+      setIsLoggedIn(loggedIn);
+
+      if (loggedIn) {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setIsLoggedIn(false);
+    setUser(null);
+    router.push("/login");
+  };
+
+  return (
+    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/assets/logo.svg"
+              alt="MockTest Logo"
+              width={140}
+              height={32}
+              priority
+            />
+          </Link>
+
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link href="/#programs" className="text-gray-700 hover:text-primary">
+              Programs
+            </Link>
+            <Link href="/#features" className="text-gray-700 hover:text-primary">
+              Features
+            </Link>
+            <Link href="/#about" className="text-gray-700 hover:text-primary">
+              About
+            </Link>
+
+            {isLoggedIn ? (
+              <>
+                <Link href="/dashboard" className="text-gray-700 hover:text-primary">
+                  Dashboard
+                </Link>
+
+                <div className="flex items-center gap-3">
+                  <span className="flex items-center gap-2 text-gray-700">
+                    <User size={18} />
+                    {user?.full_name}
+                  </span>
+
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <Link href="/login" className="text-gray-700 hover:text-primary">
+                  Login
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-primary text-white px-5 py-2 rounded-lg hover:bg-blue-600"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden py-4 border-t border-gray-200">
+            <div className="flex flex-col space-y-4">
+              <Link href="/#programs" onClick={() => setIsMenuOpen(false)}>
+                Programs
+              </Link>
+              <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
+                Features
+              </Link>
+              <Link href="/#about" onClick={() => setIsMenuOpen(false)}>
+                About
+              </Link>
+
+              {isLoggedIn ? (
+                <>
+                  <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                    Dashboard
+                  </Link>
+
+                  <div className="pt-2 border-t">
+                    <p className="text-sm text-gray-600 mb-2">
+                      Logged in as {user?.full_name}
+                    </p>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center gap-2 text-red-600"
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="bg-primary text-white px-5 py-2 rounded-lg text-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Get Started
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
