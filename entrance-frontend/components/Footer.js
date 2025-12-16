@@ -17,16 +17,16 @@ export default function Footer() {
               CSIT, and CMAT.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="hover:text-primary transition-colors">
+              <a href="https://www.facebook.com/collegeinfonepal" className="hover:text-primary transition-colors">
                 <Facebook size={20} />
               </a>
-              <a href="#" className="hover:text-primary transition-colors">
+              <a href="https://x.com/CollegeNepal" className="hover:text-primary transition-colors">
                 <Twitter size={20} />
               </a>
-              <a href="#" className="hover:text-primary transition-colors">
+              <a href="https://www.instagram.com/collegeinfonp/" className="hover:text-primary transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="hover:text-primary transition-colors">
+              <a href="https://www.youtube.com/@collegeinfonepalvideos" className="hover:text-primary transition-colors">
                 <Youtube size={20} />
               </a>
             </div>
@@ -64,22 +64,22 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Programs</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/programs/bit" className="text-sm hover:text-primary transition-colors">
+                <Link href="/program/bit" className="text-sm hover:text-primary transition-colors">
                   BIT
                 </Link>
               </li>
               <li>
-                <Link href="/programs/bca" className="text-sm hover:text-primary transition-colors">
+                <Link href="/program/bca" className="text-sm hover:text-primary transition-colors">
                   BCA
                 </Link>
               </li>
               <li>
-                <Link href="/programs/csit" className="text-sm hover:text-primary transition-colors">
+                <Link href="/program/csit" className="text-sm hover:text-primary transition-colors">
                   BSc CSIT
                 </Link>
               </li>
               <li>
-                <Link href="/programs/cmat" className="text-sm hover:text-primary transition-colors">
+                <Link href="/program/cmat" className="text-sm hover:text-primary transition-colors">
                   CMAT
                 </Link>
               </li>
@@ -102,8 +102,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <Phone size={18} className="flex-shrink-0" />
-                <a href="tel:+977-1-1234567" className="text-sm hover:text-primary transition-colors">
-                  +977-1-1234567
+                <a href="tel:+977-9745450062" className="text-sm hover:text-primary transition-colors">
+                  +977-9745450062
                 </a>
               </li>
             </ul>
@@ -112,7 +112,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 mt-8 pt-8 text-center md:flex md:justify-between md:items-center">
-          <p className="text-sm text-gray-400">© {currentYear} CollegeInfoNepal. All rights reserved.</p>
+          <p className="text-sm text-gray-400">© {currentYear} College Info Nepal Pvt. Ltd. All rights reserved.</p>
           <div className="flex justify-center space-x-6 mt-4 md:mt-0">
             <Link href="/privacy" className="text-sm text-gray-400 hover:text-primary transition-colors">
               Privacy Policy

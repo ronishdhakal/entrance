@@ -25,7 +25,7 @@ const programs = [
     textColor: "text-purple-600",
   },
   {
-    id: "csit",
+    id: "bsc-csit",
     title: "BSc CSIT",
     fullName: "Bachelor of Science in Computer Science and IT",
     icon: Calculator,

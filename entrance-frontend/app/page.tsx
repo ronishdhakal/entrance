@@ -7,9 +7,9 @@ import StatsSection from "@/components/home/StatsSection"
 import CTASection from "@/components/home/CTASection"
 
 export const metadata = {
-  title: "MockTest Nepal - BIT, BCA, BSc CSIT, CMAT Practice",
+  title: "Entrance Prep by College Info Nepal",
   description:
-    "Nepal's leading mock test platform for entrance exams. Practice for BIT, BCA, BSc CSIT, and CMAT with 100+ questions per program.",
+    "Prepare for BSc CSIT, BIT, BBA and other entrance exams with smart mock tests, real exam patterns, practice questions, and expert guidance by College Info Nepal.",
 }
 
 export default function HomePage() {

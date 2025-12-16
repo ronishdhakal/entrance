@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
 
 
 class UserManager(BaseUserManager):
@@ -20,38 +23,51 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError("Superuser must have is_staff=True.")
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError("Superuser must have is_superuser=True.")
-
         return self.create_user(email, password, **extra_fields)
 
 
 class User(AbstractUser):
-    username = None  # remove username
+    username = None
 
     PREPARATION_CHOICES = [
-        ('CSIT', 'BSc CSIT'),
-        ('BIT', 'BIT'),
-        ('BCA', 'BCA'),
-        ('CMAT', 'CMAT'),
+        ("CSIT", "BSc CSIT"),
+        ("BIT", "BIT"),
+        ("BCA", "BCA"),
+        ("CMAT", "CMAT"),
     ]
 
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20, blank=True, null=True)
     preparing_for = models.CharField(
-        max_length=10,
-        choices=PREPARATION_CHOICES,
-        blank=True,
-        null=True
+        max_length=10, choices=PREPARATION_CHOICES, blank=True, null=True
     )
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []  # email & password only
+    REQUIRED_FIELDS = []
 
-    objects = UserManager()  # 👈 IMPORTANT
+    objects = UserManager()
 
     def __str__(self):
         return self.email
+
+
+# ===============================
+# PASSWORD RESET OTP MODEL
+# ===============================
+class PasswordResetOTP(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="password_reset_otps",
+    )
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at
+
+    def __str__(self):
+        return f"Password reset OTP for {self.user.email}"

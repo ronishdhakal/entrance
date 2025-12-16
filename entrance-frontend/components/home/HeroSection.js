@@ -27,7 +27,7 @@ export default function HeroSection() {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <CheckCircle className="text-green-500 flex-shrink-0" size={24} />
-                <span className="text-gray-700">100+ Questions per Program</span>
+                <span className="text-gray-700">100+ Questions Per Program</span>
               </div>
               <div className="flex items-center space-x-3">
                 <CheckCircle className="text-green-500 flex-shrink-0" size={24} />
@@ -42,7 +42,7 @@ export default function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/signup"
+                href="/login"
                 className="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 transition-all flex items-center justify-center space-x-2 shadow-lg shadow-primary/30"
               >
                 <span>Start Practicing Now</span>

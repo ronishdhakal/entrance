@@ -1,5 +1,6 @@
 import { API_URL } from "@/lib/api-config"
-
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api"
 // Fetch all programs
 export const fetchPrograms = async () => {
   try {
@@ -193,3 +194,77 @@ export const fetchMockTestsByProgram = async (programSlug) => {
     return []
   }
 }
+
+/**
+ * Request password reset OTP
+ * @param {string} email
+ */
+export async function requestPasswordReset(email) {
+  const response = await fetch(`${API_BASE_URL}/auth/forgot-password/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || "Failed to request password reset")
+  }
+
+  return data
+}
+
+/**
+ * Verify reset OTP
+ * @param {string} email
+ * @param {string} otp
+ */
+export async function verifyResetOTP(email, otp) {
+  const response = await fetch(`${API_BASE_URL}/auth/verify-reset-otp/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, otp }),
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || "Invalid or expired OTP")
+  }
+
+  return data
+}
+
+/**
+ * Reset password using OTP
+ * @param {string} email
+ * @param {string} otp
+ * @param {string} newPassword
+ */
+export async function resetPassword(email, otp, newPassword) {
+  const response = await fetch(`${API_BASE_URL}/auth/reset-password/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      otp,
+      new_password: newPassword,
+    }),
+  })
+
+  const data = await response.json()
+
+  if (!response.ok) {
+    throw new Error(data.detail || "Failed to reset password")
+  }
+
+  return data
+}
+

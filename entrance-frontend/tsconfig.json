@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/register/page.jsx", "app/dashboard/page.jsx"  ],
+, "app/register/page.jsx", "app/dashboard/page.jsx", "components/admin/MockTestForm.jsx"  ],
   "exclude": ["node_modules"]
 }
