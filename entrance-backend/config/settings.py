@@ -13,6 +13,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
 # =========================
 # SECURITY
 # =========================
@@ -43,6 +49,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'nested_admin',
+    'ckeditor',
+    'ckeditor_uploader',
 
 
     # Custom apps
@@ -50,6 +58,9 @@ INSTALLED_APPS = [
     'apps.programs',
     'apps.mocktests',
     'apps.attempts',
+    'apps.exam',
+    'apps.news',
+    
 ]
 
 
@@ -60,6 +71,8 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # must be first
 
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # 👈 add here
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -141,10 +154,15 @@ TEMPLATES = [
 # =========================
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST", "localhost"),
+        'PORT': os.getenv("DB_PORT", "5432"),
     }
 }
+
 
 
 # =========================
@@ -172,7 +190,8 @@ USE_TZ = True
 # =========================
 # STATIC FILES
 # =========================
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

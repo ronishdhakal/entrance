@@ -67,6 +67,9 @@ export default function Navbar() {
               <Link href="/#programs" className="text-gray-700 hover:text-primary">
                 Programs
               </Link>
+              <Link href="/exam" className="text-gray-700 hover:text-primary">
+                Exams
+              </Link>
               <Link href="/#features" className="text-gray-700 hover:text-primary">
                 Features
               </Link>
@@ -125,6 +128,9 @@ export default function Navbar() {
               <div className="flex flex-col space-y-4">
                 <Link href="/#programs" onClick={() => setIsMenuOpen(false)}>
                   Programs
+                </Link>
+                <Link href="/exam" onClick={() => setIsMenuOpen(false)}>
+                  Exams
                 </Link>
                 <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
                   Features

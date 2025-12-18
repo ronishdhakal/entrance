@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { KeyRound, ArrowRight } from "lucide-react"
@@ -8,7 +8,10 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { verifyResetOTP } from "@/utils/api"
 
-export default function VerifyOTPPage() {
+/* =========================
+   CONTENT COMPONENT
+========================= */
+function VerifyOTPContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const email = searchParams.get("email")
@@ -48,10 +51,8 @@ export default function VerifyOTPPage() {
 
   return (
     <>
-      {/* ===== NAVBAR ===== */}
       <Navbar />
 
-      {/* ===== CONTENT ===== */}
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 px-4 py-12">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -116,7 +117,7 @@ export default function VerifyOTPPage() {
 
             <div className="mt-6 text-center">
               <Link
-                href={`/password/forget`}
+                href="/password/forget"
                 className="text-blue-600 font-medium"
               >
                 Didn’t receive code?
@@ -126,8 +127,18 @@ export default function VerifyOTPPage() {
         </div>
       </div>
 
-      {/* ===== FOOTER ===== */}
       <Footer />
     </>
+  )
+}
+
+/* =========================
+   PAGE EXPORT (SUSPENSE)
+========================= */
+export default function VerifyOTPPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyOTPContent />
+    </Suspense>
   )
 }

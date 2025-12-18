@@ -1,11 +1,15 @@
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 class Program(models.Model):
     title = models.CharField(max_length=100)
     abbreviation = models.CharField(max_length=20, unique=True)
     slug = models.SlugField(unique=True)
-    description = models.TextField(blank=True)
+
+    # ✅ Rich text editor in admin
+    description = RichTextField(blank=True)
+
     external_link = models.URLField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
 

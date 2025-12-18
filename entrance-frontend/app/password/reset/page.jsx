@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { Suspense, useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { Lock, Eye, EyeOff, CheckCircle } from "lucide-react"
@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import { resetPassword } from "@/utils/api"
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -45,14 +45,10 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true)
-
     try {
       await resetPassword(email, otp, password)
       setSuccess("Password reset successful! Redirecting to login...")
-
-      setTimeout(() => {
-        router.push("/login")
-      }, 1500)
+      setTimeout(() => router.push("/login"), 1500)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -62,10 +58,8 @@ export default function ResetPasswordPage() {
 
   return (
     <>
-      {/* ===== NAVBAR ===== */}
       <Navbar />
 
-      {/* ===== CONTENT ===== */}
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 px-4 py-12">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -90,7 +84,6 @@ export default function ResetPasswordPage() {
                 </div>
               )}
 
-              {/* New Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   New Password
@@ -115,7 +108,6 @@ export default function ResetPasswordPage() {
                 </div>
               </div>
 
-              {/* Confirm Password */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Confirm Password
@@ -132,7 +124,9 @@ export default function ResetPasswordPage() {
                   />
                   <button
                     type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                   >
                     {showConfirmPassword ? <EyeOff /> : <Eye />}
@@ -165,8 +159,15 @@ export default function ResetPasswordPage() {
         </div>
       </div>
 
-      {/* ===== FOOTER ===== */}
       <Footer />
     </>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ResetPasswordContent />
+    </Suspense>
   )
 }
