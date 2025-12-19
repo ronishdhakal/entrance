@@ -10,6 +10,12 @@ export const metadata = {
   title: "Entrance Prep by College Info Nepal",
   description:
     "Prepare for BSc CSIT, BIT, BBA and other entrance exams with smart mock tests, real exam patterns, practice questions, and expert guidance by College Info Nepal.",
+
+  // ✅ Google Search Console Verification (BEST PLACE)
+  other: {
+    "google-site-verification":
+      "In_u6RGEpUbj3PhoaLjXNsloEjIUZ2cXTcYqfLi_iYU",
+  },
 }
 
 export default function HomePage() {
