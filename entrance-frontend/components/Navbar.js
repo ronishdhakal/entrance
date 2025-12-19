@@ -41,11 +41,19 @@ export default function Navbar() {
       {/* ===== HEAD ===== */}
       <Head>
         <title>Entrance Prep by College Info Nepal</title>
+
         <meta
           name="description"
           content="Prepare for BSc CSIT, BIT, BBA and other entrance exams with mock tests, practice questions, real exam patterns, and smart preparation tools by College Info Nepal."
         />
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        {/* ✅ Google Search Console Verification */}
+        <meta
+          name="google-site-verification"
+          content="In_u6RGEpUbj3PhoaLjXNsloEjIUZ2cXTcYqfLi_iYU"
+        />
       </Head>
 
       {/* ===== GOOGLE ANALYTICS ===== */}
