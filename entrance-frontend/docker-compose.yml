@@ -2,10 +2,12 @@ version: "3.9"
 
 services:
   frontend:
-    build: .
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL: https://entrancebase.collegeinfonepal.com/api
+        NEXT_PUBLIC_SITE_URL: https://entrance.collegeinfonepal.com
     container_name: entrance-frontend
     ports:
       - "3001:3000"
-    env_file:
-      - .env.prod
     restart: always
