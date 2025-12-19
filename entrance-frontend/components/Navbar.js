@@ -85,6 +85,9 @@ export default function Navbar() {
               <Link href="/exam" className="text-gray-700 hover:text-primary">
                 Exams
               </Link>
+              <Link href="/book" className="text-gray-700 hover:text-primary">
+                Books
+              </Link>
               <Link href="/#features" className="text-gray-700 hover:text-primary">
                 Features
               </Link>
@@ -146,6 +149,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/exam" onClick={() => setIsMenuOpen(false)}>
                   Exams
+                </Link>
+                <Link href="/book" onClick={() => setIsMenuOpen(false)}>
+                  Books
                 </Link>
                 <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
                   Features

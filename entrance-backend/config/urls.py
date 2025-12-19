@@ -16,7 +16,9 @@ urlpatterns = [
     path("api/attempts/", include("apps.attempts.urls")),
     path("api/exam/", include("apps.exam.urls")),
     path("api/news/", include("apps.news.urls")),
+    path("api/books/", include("apps.book.urls")),
 ]
+
 
 # ✅ Serve media files in development
 if settings.DEBUG:

@@ -2,6 +2,35 @@
 
 import { InlineMath } from "react-katex"
 
+/**
+ * Renders option text with optional LaTeX.
+ * - Inline math: $x^2$
+ */
+function renderOptionText(text) {
+  if (!text) return null
+
+  const parts = text.split(/(\$[^$]+\$)/g)
+
+  return parts.map((part, index) => {
+    // Inline math $...$
+    if (part.startsWith("$") && part.endsWith("$")) {
+      return (
+        <InlineMath
+          key={index}
+          math={part.slice(1, -1)}
+        />
+      )
+    }
+
+    // Normal text
+    return (
+      <span key={index} className="whitespace-pre-wrap">
+        {part}
+      </span>
+    )
+  })
+}
+
 export default function OptionInput({
   option,
   optionIndex,
@@ -16,7 +45,9 @@ export default function OptionInput({
           type="radio"
           name={`correct-${questionKey}`}
           checked={isCorrect}
-          onChange={() => onUpdate(optionIndex, "is_correct", true)}
+          onChange={() =>
+            onUpdate(optionIndex, "is_correct", true)
+          }
           className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
         />
 
@@ -30,16 +61,18 @@ export default function OptionInput({
           onChange={(e) =>
             onUpdate(optionIndex, "option_text", e.target.value)
           }
-          placeholder={`Option ${String.fromCharCode(65 + optionIndex)}`}
+          placeholder={`Option ${String.fromCharCode(
+            65 + optionIndex
+          )}`}
           required
           className="flex-1 px-3 py-1 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
-      {/* Option Math Preview */}
+      {/* Preview */}
       {option.option_text && (
-        <div className="ml-10 bg-gray-50 border rounded px-2 py-1 text-sm">
-          <InlineMath math={option.option_text} />
+        <div className="ml-10 bg-gray-50 border rounded px-2 py-1 text-sm leading-relaxed">
+          {renderOptionText(option.option_text)}
         </div>
       )}
     </div>
