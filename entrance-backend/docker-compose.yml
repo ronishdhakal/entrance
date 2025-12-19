@@ -4,15 +4,28 @@ services:
   backend:
     build: .
     container_name: entrance-backend
-    command: ${DJANGO_COMMAND}
-    volumes:
-      - .:/app
-      - staticfiles:/app/staticfiles
-    ports:
-      - "8030:8000"
+    command: gunicorn config.wsgi:application --bind 0.0.0.0:8000
     env_file:
       - .env
-    restart: always
+    volumes:
+      - staticfiles:/app/staticfiles
+      - media:/app/media
+    ports:
+      - "8030:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    container_name: entrance-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
 
 volumes:
+  postgres_data:
   staticfiles:
+  media:

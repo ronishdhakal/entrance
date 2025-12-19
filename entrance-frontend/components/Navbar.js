@@ -1,6 +1,7 @@
 "use client";
 
 import Head from "next/head";
+import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
@@ -46,6 +47,20 @@ export default function Navbar() {
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
+
+      {/* ===== GOOGLE ANALYTICS ===== */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-3H8YGYXHPP"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-3H8YGYXHPP');
+        `}
+      </Script>
 
       {/* ===== NAVBAR ===== */}
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
