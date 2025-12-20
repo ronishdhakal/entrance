@@ -82,13 +82,16 @@ export default async function CourseCollegePage({ params }) {
                 </div>
 
                 <CollegeGrid colleges={colleges} />
+
+                {/* Bottom Description */}
+                {course.bottom_description && (
+                  <BottomDescription content={course.bottom_description} />
+                )}
               </div>
+              
             </div>
 
-            {/* Bottom Description */}
-            {course.bottom_description && (
-              <BottomDescription content={course.bottom_description} />
-            )}
+            
           </div>
         </section>
       </main>
