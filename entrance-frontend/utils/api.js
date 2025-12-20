@@ -291,9 +291,7 @@ const normalizeBook = (book) => {
     ...book,
     images: (book.images || []).map((img) => ({
       ...img,
-      image: img.image?.startsWith("http")
-        ? img.image
-        : `${MEDIA_URL}${img.image}`,
+      image: img.image?.startsWith("http") ? img.image : `${API_BASE_URL}${img.image}`,
     })),
   }
 }
@@ -333,5 +331,119 @@ export const fetchBookBySlug = async (slug) => {
   } catch (error) {
     console.error("Error fetching book:", error)
     return null
+  }
+}
+
+/* =========================
+   COURSES
+========================= */
+
+export const fetchCourses = async () => {
+  try {
+    const response = await fetch(`${API_URL}/course/`, {
+      cache: "no-store",
+    })
+    if (response.ok) return await response.json()
+    throw new Error("Failed to fetch courses")
+  } catch (error) {
+    console.error("Error fetching courses:", error)
+    return []
+  }
+}
+
+export const fetchCourseBySlug = async (slug) => {
+  if (!slug) return null
+
+  try {
+    const response = await fetch(`${API_URL}/course/${slug}/`, {
+      cache: "no-store",
+    })
+    if (response.ok) return await response.json()
+    throw new Error("Failed to fetch course")
+  } catch (error) {
+    console.error("Error fetching course:", error)
+    return null
+  }
+}
+
+/* =========================
+   COLLEGES
+========================= */
+
+export const fetchColleges = async ({
+  course = null,
+  university = null,
+} = {}) => {
+  try {
+    const params = new URLSearchParams()
+
+    if (course) params.append("course", course)
+    if (university) params.append("university", university)
+
+    const url = `${API_URL}/college/${params.toString() ? `?${params.toString()}` : ""}`
+
+    const response = await fetch(url, {
+      cache: "no-store",
+    })
+
+    if (!response.ok) {
+      console.error("Failed to fetch colleges:", response.status)
+      return []
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Error fetching colleges:", error)
+    return []
+  }
+}
+
+export const fetchCollegeBySlug = async (slug) => {
+  if (!slug) return null
+
+  try {
+    const response = await fetch(`${API_URL}/college/${slug}/`, {
+      cache: "no-store",
+    })
+
+    if (!response.ok) {
+      console.error("Failed to fetch college:", response.status)
+      return null
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Error fetching college:", error)
+    return null
+  }
+}
+
+
+/**
+ * Fetch advertisements
+ * @param {Object} params
+ * @param {string} params.placement - home_1 | home_2 | home_3 | home_4 | popup
+ * @returns {Promise<Array>}
+ */
+export async function fetchAdvertisements({ placement } = {}) {
+  try {
+    let url = `${API_BASE_URL}/advertisement/`
+
+    if (placement) {
+      url += `?placement=${placement}`
+    }
+
+    const res = await fetch(url, {
+      cache: "no-store",
+    })
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch advertisements")
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("fetchAdvertisements error:", error)
+    return []
   }
 }

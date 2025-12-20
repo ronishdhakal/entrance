@@ -20,13 +20,13 @@ export default async function ExamPage() {
 
       <main className="flex-1 bg-background">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-primary/10 to-background py-16 px-4">
-          <div className="max-w-7xl mx-auto text-center">
+        <section className="bg-gradient-to-b from-primary/10 to-background py-10 px-2">
+          <div className="max-w-7xl mx-auto text-left">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Entrance Exams
+              Entrance Exams in Nepal
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Stay informed about upcoming entrance exams. Find exam dates,
+            <p className="text-lg text-left text-muted-foreground max-w-2xl mx-auto">
+              Stay informed about upcoming entrance exams in Nepal. Find exam dates,
               registration deadlines, and detailed information for colleges and
               universities across Nepal.
             </p>
@@ -39,7 +39,7 @@ export default async function ExamPage() {
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  All Exams
+                  All Entrance Exams
                 </h2>
                 <p className="text-muted-foreground">
                   {exams.length} {exams.length === 1 ? "exam" : "exams"} available

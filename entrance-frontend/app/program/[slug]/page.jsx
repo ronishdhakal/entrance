@@ -25,14 +25,17 @@ export default function ProgramDetailPage() {
       try {
         setLoading(true)
 
+        // 1️⃣ Fetch program
         const programResponse = await fetch(`${API_URL}/programs/${slug}/`)
         if (!programResponse.ok) throw new Error("Program not found")
         const programData = await programResponse.json()
         setProgram(programData)
 
+        // 2️⃣ Fetch mock tests using PROGRAM ID (✅ FIX)
         const mockTestsResponse = await fetch(
-          `${API_URL}/mocktests/?program=${slug}`
+          `${API_URL}/mocktests/?program=${programData.id}`
         )
+
         if (mockTestsResponse.ok) {
           const mockTestsData = await mockTestsResponse.json()
           setMockTests(mockTestsData)
@@ -47,20 +50,16 @@ export default function ProgramDetailPage() {
     fetchProgramData()
   }, [slug])
 
-  /* ===============================
-     HEAD META (CLIENT SIDE)
-     =============================== */
   const pageTitle = program
     ? `${program.abbreviation} - Entrance Mock Test, Old Question`
     : "Entrance Mock Test - College Info Nepal"
 
   const pageDescription = program
-    ? `Practice ${program.name} entrance mock tests and old questions based on real exam patterns. Prepare confidently with College Info Nepal.`
-    : "Prepare for entrance exams with mock tests and old questions by College Info Nepal."
+    ? `Practice ${program.title} entrance mock tests and old questions based on real exam patterns.`
+    : "Prepare for entrance exams with mock tests and old questions."
 
   return (
     <div className="min-h-screen bg-background">
-      {/* ✅ SINGLE HEAD – ALWAYS PRESENT */}
       <Head>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />

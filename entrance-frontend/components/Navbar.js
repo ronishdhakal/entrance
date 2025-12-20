@@ -96,8 +96,8 @@ export default function Navbar() {
               <Link href="/book" className="text-gray-700 hover:text-primary">
                 Books
               </Link>
-              <Link href="/#features" className="text-gray-700 hover:text-primary">
-                Features
+              <Link href="/college" className="text-gray-700 hover:text-primary">
+                Colleges
               </Link>
               <Link href="/#about" className="text-gray-700 hover:text-primary">
                 About

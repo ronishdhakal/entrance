@@ -4,32 +4,34 @@ import { MapPin } from "lucide-react"
 
 export default function ExamHeader({ exam }) {
   return (
-    <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-background py-12 px-4">
-      <div className="max-w-5xl mx-auto">
+    <div className="py-6 px-3">
+      <div className="max-w-6xl mx-auto">
 
         {/* Top meta row */}
-        <div className="flex items-center gap-3 mb-4">
-          <span className="bg-primary text-primary-foreground px-4 py-1.5 rounded-full text-sm font-semibold">
+        <div className="flex items-center gap-3 mb-2">
+          <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold">
             Active
           </span>
 
-          <div className="flex items-center text-muted-foreground">
-            <MapPin className="w-4 h-4 mr-1.5" />
-            <span className="text-sm font-medium">
-              {exam.institute_name}
-            </span>
-          </div>
+          {exam.institute_name && (
+            <div className="flex items-center text-muted-foreground">
+              <MapPin className="w-4 h-4 mr-1" />
+              <span className="text-sm">
+                {exam.institute_name}
+              </span>
+            </div>
+          )}
         </div>
 
-        {/* Title row with icon */}
-        <div className="flex items-start gap-4 mb-4">
+        {/* Title row */}
+        <div className="flex items-start gap-3 mb-2">
           <img
             src="/assets/exam-icon.png"
             alt="Exam Icon"
-            className="w-12 h-12 object-contain flex-shrink-0 mt-1"
+            className="w-10 h-10 object-contain flex-shrink-0 mt-1"
           />
 
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
+          <h1 className="text-3xl md:text-4xl font-semibold text-foreground leading-snug">
             {exam.title}
           </h1>
         </div>
@@ -40,7 +42,7 @@ export default function ExamHeader({ exam }) {
             href={exam.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center text-primary hover:underline font-medium"
+            className="inline-flex items-center text-sm text-primary hover:underline font-medium"
           >
             Official Website
             <svg

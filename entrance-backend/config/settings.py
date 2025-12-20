@@ -71,7 +71,11 @@ INSTALLED_APPS = [
     "apps.attempts",
     "apps.exam",
     "apps.news",
-    "apps.book"
+    "apps.book",
+    "apps.course",
+    "apps.college",
+    "apps.university",
+    "apps.advertisement",
 ]
 
 # =========================

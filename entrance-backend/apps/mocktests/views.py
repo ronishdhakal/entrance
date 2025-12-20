@@ -2,9 +2,10 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
 from .models import MockTest, Section, Question, Option
 from .serializers import (
-    MockTestSerializer, 
+    MockTestSerializer,
     AdminMockTestSerializer,
     AdminSectionSerializer,
     AdminQuestionSerializer,
@@ -15,9 +16,19 @@ from .serializers import (
 # =========================
 # PUBLIC VIEWS (Read-only for students)
 # =========================
+
 class MockTestListView(ListAPIView):
-    queryset = MockTest.objects.filter(is_published=True)
     serializer_class = MockTestSerializer
+
+    def get_queryset(self):
+        queryset = MockTest.objects.filter(is_published=True)
+
+        # ✅ FILTER BY PROGRAM (IMPORTANT FIX)
+        program_id = self.request.query_params.get("program")
+        if program_id:
+            queryset = queryset.filter(program_id=program_id)
+
+        return queryset
 
 
 class MockTestDetailView(RetrieveAPIView):
@@ -29,6 +40,7 @@ class MockTestDetailView(RetrieveAPIView):
 # =========================
 # ADMIN VIEWS (Full CRUD for staff)
 # =========================
+
 class IsStaffUser(permissions.BasePermission):
     def has_permission(self, request, view):
         return request.user and request.user.is_staff

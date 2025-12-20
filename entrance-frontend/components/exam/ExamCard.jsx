@@ -21,6 +21,9 @@ export default function ExamCard({ exam }) {
     })
   }
 
+  // ✅ Check if exam is closed
+  const isClosed = new Date() > new Date(exam.closes_at)
+
   return (
     <Link href={`/exam/${exam.slug}`}>
       <div className="group bg-card border border-border rounded-lg hover:shadow-lg transition-all duration-300 p-6 h-full">
@@ -39,13 +42,20 @@ export default function ExamCard({ exam }) {
             </h3>
 
             <div className="flex items-center text-muted-foreground text-sm">
-              <MapPin className="w-4 h-4 mr-1.5" />
+              {/* <MapPin className="w-4 h-4 mr-1.5" /> */}
               <span>{exam.institute_name}</span>
             </div>
           </div>
 
-          <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold">
-            Active
+          {/* ✅ Status badge */}
+          <span
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              isClosed
+                ? "bg-red-100 text-red-600"
+                : "bg-green-100 text-green-600"
+            }`}
+          >
+            {isClosed ? "Closed" : "Open"}
           </span>
         </div>
 

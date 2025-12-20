@@ -1,5 +1,8 @@
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
+
+import AdsPlacement from "@/components/ads/AdsPlacement"
+
 import HeroSection from "@/components/home/HeroSection"
 import ProgramsSection from "@/components/home/ProgramsSection"
 import FeaturesSection from "@/components/home/FeaturesSection"
@@ -11,7 +14,6 @@ export const metadata = {
   description:
     "Prepare for BSc CSIT, BIT, BBA and other entrance exams with smart mock tests, real exam patterns, practice questions, and expert guidance by College Info Nepal.",
 
-  // ✅ Google Search Console Verification (BEST PLACE)
   other: {
     "google-site-verification":
       "In_u6RGEpUbj3PhoaLjXNsloEjIUZ2cXTcYqfLi_iYU",
@@ -22,6 +24,9 @@ export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
+
+      {/* 🔹 Home Advertisements */}
+      <AdsPlacement />
 
       <main className="flex-1">
         <HeroSection />

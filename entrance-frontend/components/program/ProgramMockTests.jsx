@@ -3,9 +3,9 @@
 import Link from "next/link"
 import { Clock, BookOpen, ArrowRight } from "lucide-react"
 
-export default function ProgramMockTests({ mockTests, program }) {
+export default function ProgramMockTests({ mockTests = [] }) {
   return (
-    <section className="py-12">
+    <section className="py-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Section Header */}
@@ -54,7 +54,7 @@ export default function ProgramMockTests({ mockTests, program }) {
                     </div>
                     <div className="flex items-center gap-1">
                       <BookOpen className="w-4 h-4" />
-                      <span>100 questions</span>
+                      <span>Entrance pattern</span>
                     </div>
                   </div>
                 </div>
