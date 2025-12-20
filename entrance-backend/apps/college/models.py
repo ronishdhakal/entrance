@@ -23,14 +23,14 @@ class College(models.Model):
 
     priority = models.PositiveIntegerField(default=999)
 
-    cover = models.URLField(
-        blank=True,
-        help_text="Cover image URL"
+    # ✅ NEW: Verified flag
+    is_verified = models.BooleanField(
+        default=False,
+        help_text="Verified by College Info Nepal"
     )
-    logo = models.URLField(
-        blank=True,
-        help_text="Logo image URL"
-    )
+
+    cover = models.URLField(blank=True)
+    logo = models.URLField(blank=True)
 
     location = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=30, blank=True)
@@ -38,10 +38,7 @@ class College(models.Model):
 
     description = models.TextField(blank=True)
 
-    external_link = models.URLField(
-        blank=True,
-        help_text="External detail page link"
-    )
+    external_link = models.URLField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

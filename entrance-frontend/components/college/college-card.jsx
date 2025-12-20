@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { MapPin, Phone, Globe, ExternalLink } from "lucide-react"
+import { MapPin, Phone, Globe, BadgeCheck } from "lucide-react"
 import { Card } from "@/components/ui/card"
 
 export default function CollegeCard({ college }) {
@@ -10,6 +10,7 @@ export default function CollegeCard({ college }) {
     : `/college/${college.slug}`
 
   const isExternal = Boolean(college.external_link)
+  const isVerified = college.is_verified === true
 
   const LinkWrapper = ({ children, className }) =>
     isExternal ? (
@@ -55,25 +56,26 @@ export default function CollegeCard({ college }) {
 
         {/* TOP */}
         <div>
-          {/* TITLE + UNIVERSITY */}
-          <LinkWrapper className="group block">
+          {/* TITLE + VERIFIED ICON (INLINE) */}
+          <LinkWrapper className="inline-flex items-center gap-2 group">
             <h3 className="text-xl font-semibold text-gray-900 leading-tight group-hover:text-[#1ca3fd] transition-colors">
               {college.title}
             </h3>
 
-            {college.university_name && (
-              <p className="text-sm text-gray-500 mt-0.5">
-                Affiliated to {college.university_name}
-              </p>
-            )}
-
-            {/* {isExternal && (
-              <ExternalLink
-                size={14}
-                className="inline-block ml-1 text-gray-400"
+            {isVerified && (
+              <BadgeCheck
+                size={18}
+                className="text-[#1ca3fd] flex-shrink-0"
+                aria-label="Verified College"
               />
-            )} */}
+            )}
           </LinkWrapper>
+
+          {college.university_name && (
+            <p className="text-sm text-gray-500 mt-0.5">
+              Affiliated to {college.university_name}
+            </p>
+          )}
 
           {/* COURSES */}
           {college.course_titles?.length > 0 && (
