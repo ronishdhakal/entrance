@@ -29,8 +29,8 @@ export default function CollegeCard({ college }) {
 
   return (
     <Card className="w-full overflow-hidden rounded-2xl border bg-white hover:shadow-md transition-shadow">
-      
-      {/* COVER IMAGE (FULL WIDTH) */}
+
+      {/* COVER IMAGE */}
       <LinkWrapper className="relative block w-full h-[200px] bg-gray-100">
         <img
           src={college.cover || "/placeholder.svg"}
@@ -51,19 +51,28 @@ export default function CollegeCard({ college }) {
       </LinkWrapper>
 
       {/* CONTENT */}
-      <div className="flex flex-col justify-between px-6 py-2">
+      <div className="flex flex-col justify-between px-6 py-3">
 
         {/* TOP */}
         <div>
-          {/* TITLE */}
-          <LinkWrapper className="inline-flex items-center gap-2 group">
+          {/* TITLE + UNIVERSITY */}
+          <LinkWrapper className="group block">
             <h3 className="text-xl font-semibold text-gray-900 leading-tight group-hover:text-[#1ca3fd] transition-colors">
               {college.title}
             </h3>
 
-            {isExternal && (
-              <ExternalLink size={16} className="text-gray-400" />
+            {college.university_name && (
+              <p className="text-sm text-gray-500 mt-0.5">
+                Affiliated to {college.university_name}
+              </p>
             )}
+
+            {/* {isExternal && (
+              <ExternalLink
+                size={14}
+                className="inline-block ml-1 text-gray-400"
+              />
+            )} */}
           </LinkWrapper>
 
           {/* COURSES */}
