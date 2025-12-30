@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     title: "Entrance Prep by College Info Nepal",
     description:
       "Practice mock tests and prepare smarter for entrance exams in Nepal with College Info Nepal.",
-    images: ["/assets/social.png"],
+    images: ["/assets/social.jpg"],
   },
 
   /* ===== Icons ===== */
