@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -11,7 +11,6 @@ import {
   Clock,
   CheckCircle2,
   Circle,
-  Loader2,
   AlertTriangle,
 } from "lucide-react"
 import { BlockMath, InlineMath } from "react-katex"
@@ -19,14 +18,13 @@ import "katex/dist/katex.min.css"
 import { submitAnswer } from "@/utils/api"
 import { cn } from "@/lib/utils"
 
-/* ================= SAME RENDERER AS ADMIN PREVIEW ================= */
+/* ================= MATH RENDER ================= */
 function renderMathText(text) {
   if (!text) return null
 
   const parts = text.split(/(\$\$[\s\S]*?\$\$|\$[^$]+\$)/g)
 
   return parts.map((part, index) => {
-    // Block math $$...$$
     if (part.startsWith("$$") && part.endsWith("$$")) {
       return (
         <div key={index} className="my-2">
@@ -34,13 +32,9 @@ function renderMathText(text) {
         </div>
       )
     }
-
-    // Inline math $...$
     if (part.startsWith("$") && part.endsWith("$")) {
       return <InlineMath key={index} math={part.slice(1, -1)} />
     }
-
-    // Normal text
     return (
       <span key={index} className="whitespace-pre-wrap">
         {part}
@@ -51,31 +45,50 @@ function renderMathText(text) {
 
 export function QuestionViewer({
   sections,
+  selectedOptionalSectionIds = [], // ✅ REQUIRED
   attemptId,
   duration,
   onSubmitExam,
   token,
 }) {
+  /* ================= FILTER SECTIONS (CORRECT) ================= */
+  const filteredSections = useMemo(() => {
+    return sections.filter((section) => {
+      // mandatory section → always include
+      if (!section.is_optional) return true
+
+      // optional section → include ONLY if selected
+      return selectedOptionalSectionIds.includes(section.id)
+    })
+  }, [sections, selectedOptionalSectionIds])
+
+  /* ================= STATE ================= */
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState({})
   const [flaggedQuestions, setFlaggedQuestions] = useState(new Set())
   const [timeRemaining, setTimeRemaining] = useState(duration * 60)
   const [saving, setSaving] = useState(false)
 
-  /* ---------------- FLATTEN QUESTIONS ---------------- */
-  const allQuestions = sections.flatMap((section) =>
-    section.questions.map((q) => ({
-      ...q,
-      sectionTitle: section.title,
-    })),
+  /* ================= FLATTEN QUESTIONS ================= */
+  const allQuestions = useMemo(
+    () =>
+      filteredSections.flatMap((section) =>
+        section.questions.map((q) => ({
+          ...q,
+          sectionTitle: section.title,
+        })),
+      ),
+    [filteredSections],
   )
 
   const currentQuestion = allQuestions[currentQuestionIndex]
   const totalQuestions = allQuestions.length
   const answeredCount = Object.keys(answers).length
-  const progress = (answeredCount / totalQuestions) * 100
+  const progress = totalQuestions
+    ? (answeredCount / totalQuestions) * 100
+    : 0
 
-  /* ---------------- TIMER ---------------- */
+  /* ================= TIMER ================= */
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -100,8 +113,10 @@ export function QuestionViewer({
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
-  /* ---------------- ANSWER HANDLING ---------------- */
+  /* ================= ANSWERS ================= */
   const handleOptionSelect = async (optionId) => {
+    if (!currentQuestion) return
+
     setSaving(true)
     try {
       await submitAnswer(attemptId, currentQuestion.id, optionId, token)
@@ -109,8 +124,7 @@ export function QuestionViewer({
         ...prev,
         [currentQuestion.id]: optionId,
       }))
-    } catch (error) {
-      console.error(error)
+    } catch {
       alert("Failed to save answer.")
     } finally {
       setSaving(false)
@@ -118,6 +132,8 @@ export function QuestionViewer({
   }
 
   const handleFlagQuestion = () => {
+    if (!currentQuestion) return
+
     setFlaggedQuestions((prev) => {
       const next = new Set(prev)
       next.has(currentQuestion.id)
@@ -127,18 +143,13 @@ export function QuestionViewer({
     })
   }
 
-  const handlePrevious = () =>
-    currentQuestionIndex > 0 &&
-    setCurrentQuestionIndex((i) => i - 1)
-
-  const handleNext = () =>
-    currentQuestionIndex < totalQuestions - 1 &&
-    setCurrentQuestionIndex((i) => i + 1)
-
   const handleSubmitExam = async () => {
-    if (answeredCount < totalQuestions) {
-      if (!confirm("You have unanswered questions. Submit anyway?")) return
-    }
+    if (
+      answeredCount < totalQuestions &&
+      !confirm("You have unanswered questions. Submit anyway?")
+    )
+      return
+
     if (confirm("Submit exam? This cannot be undone.")) {
       await onSubmitExam()
     }
@@ -150,11 +161,20 @@ export function QuestionViewer({
     return "unanswered"
   }
 
+  if (!currentQuestion) {
+    return (
+      <div className="text-center py-12 text-muted-foreground">
+        No questions available for the selected sections.
+      </div>
+    )
+  }
+
+  /* ================= RENDER ================= */
   return (
     <div className="space-y-6">
-      {/* ================= TOP BAR ================= */}
+      {/* ===== TOP BAR ===== */}
       <Card className="p-4 sticky top-4 z-10 bg-background/95 backdrop-blur">
-        <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
             <Clock
               className={cn(
@@ -162,77 +182,46 @@ export function QuestionViewer({
                 timeRemaining < 300 && "text-destructive",
               )}
             />
-            <span className="font-mono text-lg font-semibold">
+            <span className="font-mono font-semibold">
               {formatTime(timeRemaining)}
             </span>
             {timeRemaining < 300 && (
-              <Badge variant="destructive" className="animate-pulse">
+              <Badge variant="destructive">
                 <AlertTriangle className="size-3 mr-1" />
                 Time Running Out
               </Badge>
             )}
           </div>
 
-          <div className="flex items-center gap-4">
-            <span className="text-sm">
-              Question {currentQuestionIndex + 1} of {totalQuestions}
-            </span>
-            <div className="w-24 h-2 bg-secondary rounded-full overflow-hidden">
-              <div
-                className="h-full bg-primary"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <span className="text-sm font-medium">
-              {answeredCount}/{totalQuestions}
-            </span>
-          </div>
+          <span className="text-sm">
+            {answeredCount}/{totalQuestions} answered
+          </span>
         </div>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* ================= QUESTION AREA ================= */}
+        {/* ===== QUESTION ===== */}
         <div className="lg:col-span-3 space-y-4">
           <Card className="p-6">
-            {/* Header */}
-            <div className="flex items-start justify-between">
+            <div className="flex justify-between">
               <div>
-                <div className="flex gap-2 mb-2">
-                  <Badge variant="outline">
-                    {currentQuestion.sectionTitle}
-                  </Badge>
-                  <Badge variant="secondary">
-                    +{currentQuestion.marks}
-                  </Badge>
-                  {currentQuestion.negative_marks > 0 && (
-                    <Badge variant="destructive">
-                      -{currentQuestion.negative_marks}
-                    </Badge>
-                  )}
-                </div>
-                <h3 className="text-lg font-semibold">
+                <Badge variant="outline">
+                  {currentQuestion.sectionTitle}
+                </Badge>
+                <h3 className="mt-2 font-semibold">
                   Question {currentQuestionIndex + 1}
                 </h3>
               </div>
-              <Button
-                size="sm"
-                variant={
-                  flaggedQuestions.has(currentQuestion.id)
-                    ? "default"
-                    : "outline"
-                }
-                onClick={handleFlagQuestion}
-              >
+
+              <Button size="sm" variant="outline" onClick={handleFlagQuestion}>
                 <Flag className="size-4" />
               </Button>
             </div>
 
-            {/* -------- QUESTION TEXT (FIXED) -------- */}
-            <div className="mt-4 bg-gray-50 border rounded p-4 text-base leading-relaxed">
+            <div className="mt-4 bg-gray-50 p-4 rounded">
               {renderMathText(currentQuestion.question_text)}
             </div>
 
-            {/* -------- OPTIONS (FIXED) -------- */}
             <div className="space-y-3 mt-6">
               {currentQuestion.options.map((option) => {
                 const isSelected =
@@ -244,21 +233,19 @@ export function QuestionViewer({
                     onClick={() => handleOptionSelect(option.id)}
                     disabled={saving}
                     className={cn(
-                      "w-full p-4 rounded-lg border-2 text-left transition-all",
+                      "w-full p-4 border-2 rounded text-left transition",
                       isSelected
                         ? "border-primary bg-primary/10"
-                        : "border-border hover:border-primary hover:bg-primary/5",
+                        : "border-border hover:border-primary",
                     )}
                   >
-                    <div className="flex items-start gap-3">
+                    <div className="flex gap-3">
                       {isSelected ? (
-                        <CheckCircle2 className="size-5 text-primary mt-1" />
+                        <CheckCircle2 className="size-5 text-primary" />
                       ) : (
-                        <Circle className="size-5 text-muted-foreground mt-1" />
+                        <Circle className="size-5 text-muted-foreground" />
                       )}
-                      <div className="text-sm leading-relaxed">
-                        {renderMathText(option.option_text)}
-                      </div>
+                      {renderMathText(option.option_text)}
                     </div>
                   </button>
                 )
@@ -266,64 +253,61 @@ export function QuestionViewer({
             </div>
           </Card>
 
-          {/* Navigation */}
           <div className="flex justify-between">
             <Button
               variant="outline"
-              onClick={handlePrevious}
               disabled={currentQuestionIndex === 0}
+              onClick={() =>
+                setCurrentQuestionIndex((i) => Math.max(i - 1, 0))
+              }
             >
-              <ChevronLeft className="mr-2 size-4" /> Previous
+              <ChevronLeft className="mr-2 size-4" />
+              Previous
             </Button>
+
             <Button
-              onClick={handleNext}
               disabled={currentQuestionIndex === totalQuestions - 1}
+              onClick={() =>
+                setCurrentQuestionIndex((i) =>
+                  Math.min(i + 1, totalQuestions - 1),
+                )
+              }
             >
-              Next <ChevronRight className="ml-2 size-4" />
+              Next
+              <ChevronRight className="ml-2 size-4" />
             </Button>
           </div>
         </div>
 
-        {/* ================= PALETTE ================= */}
+        {/* ===== PALETTE ===== */}
         <div className="lg:col-span-1">
-          <Card className="p-4 sticky top-24">
+          <Card className="p-4">
             <h4 className="font-semibold mb-4">Question Palette</h4>
+
             <div className="grid grid-cols-5 gap-2">
-              {allQuestions.map((q, i) => {
-                const status = getQuestionStatus(q.id)
-                return (
-                  <button
-                    key={q.id}
-                    onClick={() => setCurrentQuestionIndex(i)}
-                    className={cn(
-                      "size-10 rounded border-2",
-                      status === "answered" &&
-                        "border-primary bg-primary/10",
-                      status === "flagged" &&
-                        "border-orange-500 bg-orange-500/10",
-                      status === "unanswered" && "border-border",
-                      currentQuestionIndex === i &&
-                        "ring-2 ring-primary",
-                    )}
-                  >
-                    {i + 1}
-                  </button>
-                )
-              })}
+              {allQuestions.map((q, i) => (
+                <button
+                  key={q.id}
+                  onClick={() => setCurrentQuestionIndex(i)}
+                  className={cn(
+                    "size-10 border rounded",
+                    getQuestionStatus(q.id) === "answered" &&
+                      "bg-primary/10 border-primary",
+                    currentQuestionIndex === i &&
+                      "ring-2 ring-primary",
+                  )}
+                >
+                  {i + 1}
+                </button>
+              ))}
             </div>
 
             <Button
-              onClick={handleSubmitExam}
               className="w-full mt-4"
+              onClick={handleSubmitExam}
               disabled={saving}
             >
-              {saving ? (
-                <>
-                  <Loader2 className="mr-2 size-4 animate-spin" /> Saving…
-                </>
-              ) : (
-                "Submit Exam"
-              )}
+              Submit Exam
             </Button>
           </Card>
         </div>

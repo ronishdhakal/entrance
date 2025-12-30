@@ -3,21 +3,33 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Eye, EyeOff, Mail, Lock, User, UserPlus, Phone } from "lucide-react"
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  User,
+  UserPlus,
+  Phone,
+  MapPin,
+} from "lucide-react"
 import { API_URL } from "@/lib/api-config"
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
 export default function RegisterPage() {
   const router = useRouter()
+
   const [formData, setFormData] = useState({
     email: "",
     full_name: "",
     phone: "",
+    address: "",            // ✅ added
     preparing_for: "",
     password: "",
     password2: "",
   })
+
   const [showPassword, setShowPassword] = useState(false)
   const [showPassword2, setShowPassword2] = useState(false)
   const [error, setError] = useState("")
@@ -50,9 +62,10 @@ export default function RegisterPage() {
           email: formData.email,
           full_name: formData.full_name,
           phone: formData.phone,
+          address: formData.address,               // ✅ added
           preparing_for: formData.preparing_for,
           password: formData.password,
-          password_confirm: formData.password2, // ✅ matches backend
+          password_confirm: formData.password2,    // ✅ backend match
         }),
       })
 
@@ -83,10 +96,8 @@ export default function RegisterPage() {
     <>
       {/* ===== SHARED BACKGROUND (NAVBAR + REGISTER) ===== */}
       <div className="bg-gradient-to-br from-blue-50 to-blue-100">
-        {/* Navbar */}
         <Navbar />
 
-        {/* Register Content */}
         <div className="flex justify-center px-4 py-4">
           <div className="max-w-md w-full">
             {/* Header */}
@@ -164,6 +175,24 @@ export default function RegisterPage() {
                   </div>
                 </div>
 
+                {/* Address */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Address
+                  </label>
+                  <div className="relative">
+                    <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleChange}
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                      placeholder="Enter your address"
+                    />
+                  </div>
+                </div>
+
                 {/* Preparing For */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -205,7 +234,11 @@ export default function RegisterPage() {
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -232,11 +265,16 @@ export default function RegisterPage() {
                       onClick={() => setShowPassword2(!showPassword2)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                     >
-                      {showPassword2 ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword2 ? (
+                        <EyeOff className="w-5 h-5" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
                     </button>
                   </div>
                 </div>
 
+                {/* Submit */}
                 <button
                   type="submit"
                   disabled={loading}
@@ -275,7 +313,6 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* ===== FOOTER ===== */}
       <Footer />
     </>
   )

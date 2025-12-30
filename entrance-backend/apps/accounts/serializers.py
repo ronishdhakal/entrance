@@ -12,6 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
             'id',
             'email',
             'full_name',
+            'phone',
+            'address',        # ✅ added
+            'preparing_for',
             'is_staff',
             'is_superuser',
             'is_active',
@@ -29,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email',
             'full_name',
             'phone',
+            'address',        # ✅ added
             'preparing_for',
             'password',
             'password_confirm',
@@ -42,7 +46,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password_confirm')
         return User.objects.create_user(**validated_data)
-
 
 
 class LoginSerializer(serializers.Serializer):
@@ -64,7 +67,6 @@ class LoginSerializer(serializers.Serializer):
         if not user.is_active:
             raise serializers.ValidationError("User account is disabled")
 
-        # Generate tokens
         refresh = RefreshToken.for_user(user)
 
         return {
@@ -74,6 +76,9 @@ class LoginSerializer(serializers.Serializer):
                 'id': user.id,
                 'email': user.email,
                 'full_name': user.full_name,
+                'phone': user.phone,
+                'address': user.address,   # ✅ added
+                'preparing_for': user.preparing_for,
                 'is_staff': user.is_staff,
                 'is_superuser': user.is_superuser,
                 'is_active': user.is_active,

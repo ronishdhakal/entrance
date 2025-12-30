@@ -11,20 +11,22 @@ class UserAdmin(BaseUserAdmin):
     list_display = (
         'email',
         'full_name',
+        'phone',
+        'address',   # ✅ added
         'preparing_for',
         'is_active',
         'is_staff',
     )
     list_filter = ('is_active', 'is_staff', 'preparing_for')
-    search_fields = ('email', 'full_name')
+    search_fields = ('email', 'full_name', 'phone', 'address')
 
-    # Fields shown while editing a user
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal info'), {
             'fields': (
                 'full_name',
                 'phone',
+                'address',   # ✅ added
                 'preparing_for',
             )
         }),
@@ -42,7 +44,6 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
-    # Fields shown while creating a user (Add User page)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -50,6 +51,7 @@ class UserAdmin(BaseUserAdmin):
                 'email',
                 'full_name',
                 'phone',
+                'address',   # ✅ added
                 'preparing_for',
                 'password1',
                 'password2',

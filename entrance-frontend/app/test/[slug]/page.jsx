@@ -20,10 +20,24 @@ import { TestSections } from "@/components/mock-test-detail/test-sections"
 import { TestInstructions } from "@/components/mock-test-detail/test-instructions"
 import { TestSidebar } from "@/components/mock-test-detail/test-sidebar"
 import { QuestionViewer } from "@/components/mock-test-detail/question-viewer"
+import { TestResultPoster } from "@/components/mock-test-detail/test-result-poster"
+
 
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { ArrowLeft, Loader2, CheckCircle } from "lucide-react"
+
+/* ================= OPTIONAL GROUP UTILS ================= */
+function getOptionalGroups(sections) {
+  const groups = {}
+  sections.forEach((s) => {
+    if (s.is_optional && s.optional_group) {
+      if (!groups[s.optional_group]) groups[s.optional_group] = []
+      groups[s.optional_group].push(s)
+    }
+  })
+  return groups
+}
 
 export default function MockTestDetailPage() {
   const params = useParams()
@@ -40,52 +54,73 @@ export default function MockTestDetailPage() {
   const [testSubmitted, setTestSubmitted] = useState(false)
   const [testResult, setTestResult] = useState(null)
 
+  /* ---------- OPTIONAL SELECTION STATE ---------- */
+  const [showOptionalModal, setShowOptionalModal] = useState(false)
+  const [selectedOptionalSections, setSelectedOptionalSections] = useState({})
+
+  /* ================= LOAD MOCK TEST ================= */
   useEffect(() => {
-    const loadMockTest = async () => {
+    const load = async () => {
       try {
         setLoading(true)
         const data = await fetchMockTestDetail(params.slug)
-        if (data) setMockTest(data)
-        else setError("Mock test not found")
-      } catch (err) {
-        console.error(err)
-        setError("Failed to load mock test details")
+        if (!data) throw new Error()
+        setMockTest(data)
+      } catch {
+        setError("Mock test not found")
       } finally {
         setLoading(false)
       }
     }
-
-    if (params.slug) loadMockTest()
+    load()
   }, [params.slug])
 
+  const optionalGroups = mockTest
+    ? getOptionalGroups(mockTest.sections)
+    : {}
+
+  const hasOptionalGroups = Object.keys(optionalGroups).length > 0
+  const allGroupsSelected =
+    Object.keys(optionalGroups).length ===
+    Object.keys(selectedOptionalSections).length
+
+  /* ================= START TEST (ENFORCED) ================= */
   const handleStartTest = async () => {
+    const token = getAccessToken()
+    if (!token) {
+      router.push(`/login?redirect=/mock-tests/${params.slug}`)
+      return
+    }
+
+    // 🚨 FORCE SELECTION
+    if (hasOptionalGroups && !allGroupsSelected) {
+      setShowOptionalModal(true)
+      return
+    }
+
     try {
-      const token = getAccessToken()
-      if (!token) {
-        router.push(`/login?redirect=/mock-tests/${params.slug}`)
+      setLoading(true)
+
+      const response = await startAttempt(
+        mockTest.id,
+        Object.values(selectedOptionalSections),
+        token,
+      )
+
+      if (!response?.attempt_id) {
+        alert("Failed to start test.")
         return
       }
 
-      setLoading(true)
-      const response = await startAttempt(mockTest.id, [], token)
+      setAttemptId(response.attempt_id)
 
-      if (response?.attempt_id) {
-        setAttemptId(response.attempt_id)
+      const questions = await fetchAttemptQuestions(
+        response.attempt_id,
+        token,
+      )
 
-        const questionsData = await fetchAttemptQuestions(
-          response.attempt_id,
-          token
-        )
-
-        if (questionsData?.sections?.length) {
-          setAttemptQuestions(questionsData.sections)
-          setTestStarted(true)
-        } else {
-          alert("No questions found for this test.")
-        }
-      } else {
-        alert("Failed to start test.")
-      }
+      setAttemptQuestions(questions.sections)
+      setTestStarted(true)
     } catch (err) {
       console.error(err)
       alert("Error starting test.")
@@ -94,21 +129,13 @@ export default function MockTestDetailPage() {
     }
   }
 
+  /* ================= SUBMIT ================= */
   const handleSubmitExam = async () => {
     try {
-      const token = getAccessToken()
       setLoading(true)
-
-      const result = await submitExam(attemptId, token)
-      if (result) {
-        setTestResult(result)
-        setTestSubmitted(true)
-      } else {
-        alert("Failed to submit exam.")
-      }
-    } catch (err) {
-      console.error(err)
-      alert("Error submitting exam.")
+      const result = await submitExam(attemptId, getAccessToken())
+      setTestResult(result)
+      setTestSubmitted(true)
     } finally {
       setLoading(false)
     }
@@ -121,129 +148,136 @@ export default function MockTestDetailPage() {
       {/* ================= LOADING ================= */}
       {loading && (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="size-12 animate-spin text-primary mx-auto mb-4" />
-            <p className="text-muted-foreground">
-              {testStarted
-                ? "Loading questions..."
-                : "Loading mock test details..."}
-            </p>
-          </div>
+          <Loader2 className="size-10 animate-spin text-primary" />
         </div>
       )}
 
       {/* ================= ERROR ================= */}
       {!loading && (error || !mockTest) && (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center max-w-md">
-            <h1 className="text-2xl font-bold mb-4">Mock Test Not Found</h1>
-            <p className="text-muted-foreground mb-6">
-              {error ||
-                "The mock test you're looking for doesn't exist or has been removed."}
-            </p>
-            <Button asChild>
-              <Link href="/mock-tests">
-                <ArrowLeft className="size-4 mr-2" />
-                Back to Mock Tests
-              </Link>
-            </Button>
-          </div>
+          <Button asChild>
+            <Link href="/mock-tests">
+              <ArrowLeft className="mr-2 size-4" />
+              Back to Tests
+            </Link>
+          </Button>
         </div>
       )}
 
       {/* ================= RESULT ================= */}
-      {!loading && testSubmitted && testResult && (
-        <div className="min-h-screen bg-background">
-          <div className="container max-w-3xl mx-auto px-4 py-16">
-            <Card className="p-8 text-center">
-              <CheckCircle className="size-16 text-green-500 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold mb-2">
-                Test Submitted Successfully!
-              </h1>
-              <p className="text-muted-foreground mb-8">
-                Your answers have been recorded and evaluated.
-              </p>
+      {!loading && testSubmitted && testResult && mockTest && (
+  <TestResultPoster
+    result={testResult}
+    mockTest={mockTest}
+  />
+)}
 
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="p-4 bg-primary/5 rounded-lg">
-                  <div className="text-3xl font-bold text-primary mb-1">
-                    {testResult.score}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Your Score
-                  </div>
-                </div>
-                <div className="p-4 bg-secondary rounded-lg">
-                  <div className="text-3xl font-bold mb-1">
-                    {testResult.status === "submitted"
-                      ? "Completed"
-                      : "Auto-Submitted"}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Status
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex gap-4 justify-center">
-                <Button asChild variant="outline">
-                  <Link href="/mock-tests">
-                    <ArrowLeft className="size-4 mr-2" />
-                    Back to Tests
-                  </Link>
-                </Button>
-                <Button asChild>
-                  <Link href="/dashboard">View Dashboard</Link>
-                </Button>
-              </div>
-            </Card>
-          </div>
-        </div>
-      )}
 
       {/* ================= QUESTION VIEW ================= */}
       {!loading && testStarted && attemptQuestions && !testSubmitted && (
-        <div className="min-h-screen bg-background">
-          <div className="container max-w-7xl mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-4">{mockTest.title}</h1>
+        <div className="container max-w-7xl mx-auto px-4 py-8">
+          <QuestionViewer
+  sections={attemptQuestions}
+  selectedOptionalSectionIds={Object.values(selectedOptionalSections)}
+  attemptId={attemptId}
+  duration={mockTest.duration}
+  onSubmitExam={handleSubmitExam}
+  token={getAccessToken()}
+/>
 
-            <QuestionViewer
-              sections={attemptQuestions}
-              attemptId={attemptId}
-              duration={mockTest.duration}
-              onSubmitExam={handleSubmitExam}
-              token={getAccessToken()}
-            />
+        </div>
+      )}
+
+      {/* ================= DETAIL VIEW ================= */}
+      {!loading && !testStarted && mockTest && (
+        <div className="container max-w-7xl mx-auto px-4 py-8">
+          <Button variant="ghost" asChild className="mb-4">
+            <Link href="/mock-tests">
+              <ArrowLeft className="mr-2 size-4" />
+              Back
+            </Link>
+          </Button>
+
+          {/* ✅ MOBILE START BUTTON (TOP) */}
+          <div className="block lg:hidden mb-6">
+            <Button
+              className="w-full h-12 text-base font-semibold"
+              onClick={handleStartTest}
+            >
+              Start Test
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6">
+              <TestHeader mockTest={mockTest} />
+              <TestSections sections={mockTest.sections} />
+              <TestInstructions mockTest={mockTest} />
+            </div>
+
+            <div className="lg:col-span-1">
+              <TestSidebar
+                mockTest={mockTest}
+                onStartTest={handleStartTest}
+              />
+            </div>
           </div>
         </div>
       )}
 
-      {/* ================= DEFAULT DETAIL VIEW ================= */}
-      {!loading && !testStarted && mockTest && (
-        <div className="min-h-screen bg-background">
-          <div className="container max-w-7xl mx-auto px-4 py-8">
-            <Button variant="ghost" className="mb-6" asChild>
-              <Link href="/mock-tests">
-                <ArrowLeft className="size-4 mr-2" />
-                Back to Mock Tests
-              </Link>
-            </Button>
+      {/* ================= OPTIONAL SELECTION MODAL ================= */}
+      {showOptionalModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
+          <Card className="w-full max-w-lg p-6">
+            <h3 className="text-lg font-semibold mb-4">
+              Choose Optional Sections
+            </h3>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <TestHeader mockTest={mockTest} />
-                <TestSections sections={mockTest.sections} />
-                <TestInstructions mockTest={mockTest} />
+            {Object.entries(optionalGroups).map(([group, sections]) => (
+              <div key={group} className="mb-4">
+                <p className="font-medium mb-2">
+                  Optional Group {group} (Choose one)
+                </p>
+                {sections.map((s) => (
+                  <label
+                    key={s.id}
+                    className="flex items-center gap-3 p-2 border rounded mb-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name={`group_${group}`}
+                      checked={selectedOptionalSections[group] === s.id}
+                      onChange={() =>
+                        setSelectedOptionalSections((prev) => ({
+                          ...prev,
+                          [group]: s.id,
+                        }))
+                      }
+                    />
+                    <span>{s.title}</span>
+                  </label>
+                ))}
               </div>
+            ))}
 
-              <div className="lg:col-span-1">
-                <TestSidebar
-                  mockTest={mockTest}
-                  onStartTest={handleStartTest}
-                />
-              </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowOptionalModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={!allGroupsSelected}
+                onClick={() => {
+                  setShowOptionalModal(false)
+                  handleStartTest()
+                }}
+              >
+                Confirm & Start
+              </Button>
             </div>
-          </div>
+          </Card>
         </div>
       )}
 

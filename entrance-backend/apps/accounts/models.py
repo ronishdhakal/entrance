@@ -39,6 +39,10 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=255)
     phone = models.CharField(max_length=20, blank=True, null=True)
+
+    # ✅ NEW FIELD
+    address = models.CharField(max_length=255, blank=True, null=True)
+
     preparing_for = models.CharField(
         max_length=10, choices=PREPARATION_CHOICES, blank=True, null=True
     )
