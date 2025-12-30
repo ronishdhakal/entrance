@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     siteName: "Entrance Prep by College Info Nepal",
     images: [
       {
-        url: "/assets/social.png",
+        url: "/assets/social.jpg",
         width: 1200,
         height: 630,
         alt: "Entrance Prep by College Info Nepal – Mock Tests & Entrance Preparation",
