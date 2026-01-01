@@ -1,6 +1,8 @@
+"use client"
+
 import CollegeCard from "./college-card"
 
-export default function CollegeGrid({ colleges }) {
+export default function CollegeGrid({ colleges, courseId = "" }) {
   if (!colleges || colleges.length === 0) {
     return (
       <div className="text-center py-16">
@@ -23,7 +25,11 @@ export default function CollegeGrid({ colleges }) {
         "
       >
         {colleges.map((college) => (
-          <CollegeCard key={college.id} college={college} />
+          <CollegeCard
+            key={college.id}
+            college={college}
+            defaultCourseId={courseId}
+          />
         ))}
       </div>
     </div>

@@ -208,7 +208,7 @@ export default function RegisterPage() {
                     <option value="CSIT">BSc CSIT</option>
                     <option value="BIT">BIT</option>
                     <option value="BCA">BCA</option>
-                    <option value="CMAT">CMAT</option>
+                    {/* <option value="CMAT">CMAT</option> */}
                   </select>
                 </div>
 

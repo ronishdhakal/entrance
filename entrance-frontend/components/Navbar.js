@@ -161,6 +161,9 @@ export default function Navbar() {
                 <Link href="/book" onClick={() => setIsMenuOpen(false)}>
                   Books
                 </Link>
+                <Link href="/college" onClick={() => setIsMenuOpen(false)}>
+                  Colleges
+                </Link>
                 <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
                   Features
                 </Link>

@@ -8,7 +8,9 @@ import BottomDescription from "@/components/college/bottom-description"
 import { fetchCourses, fetchCourseBySlug, fetchColleges } from "@/utils/api"
 
 export async function generateMetadata({ params }) {
+  // ✅ FIX: await params (required in Next 16 + Turbopack)
   const { slug } = await params
+
   const course = await fetchCourseBySlug(slug)
 
   if (!course) {
@@ -25,7 +27,7 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    keywords: `${course.title} colleges Nepal, ${course.abbreviation} Nepal`,
+    keywords: `${course.title} colleges Nepal, ${course.abbreviation || course.title} Nepal`,
     openGraph: {
       title,
       description,
@@ -35,18 +37,23 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function CourseCollegePage({ params }) {
+  // ✅ FIX: await params (required in Next 16 + Turbopack)
   const { slug } = await params
 
-  const [course, courses, colleges] = await Promise.all([
+  const [course, courses, rawColleges] = await Promise.all([
     fetchCourseBySlug(slug),
     fetchCourses(),
-    // ✅ FIXED: pass as object
     fetchColleges({ course: slug }),
   ])
 
   if (!course) {
     notFound()
   }
+
+  // ✅ Normalize colleges
+  const colleges = Array.isArray(rawColleges)
+    ? rawColleges
+    : rawColleges?.results || []
 
   return (
     <>
@@ -81,17 +88,18 @@ export default async function CourseCollegePage({ params }) {
                   </p>
                 </div>
 
-                <CollegeGrid colleges={colleges} />
+                {/* ✅ THIS is what enables course auto-selection */}
+                <CollegeGrid
+                  colleges={colleges}
+                  courseId={course.id}
+                />
 
-                {/* Bottom Description */}
                 {course.bottom_description && (
                   <BottomDescription content={course.bottom_description} />
                 )}
               </div>
               
             </div>
-
-            
           </div>
         </section>
       </main>

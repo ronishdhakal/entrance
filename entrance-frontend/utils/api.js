@@ -447,3 +447,67 @@ export async function fetchAdvertisements({ placement } = {}) {
     return []
   }
 }
+
+
+// ================================
+// COLLEGE INQUIRY
+// ================================
+export async function submitCollegeInquiry(data) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/inquiry/college/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        full_name: data.full_name,
+        phone: data.phone,
+        email: data.email || "",
+        college: data.college, // college ID
+        course: data.course || null, // course ID (optional)
+        message: data.message || "",
+      }),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw errorData
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("College inquiry failed:", error)
+    throw error
+  }
+}
+
+// ================================
+// PROGRAM INQUIRY
+// ================================
+export async function submitProgramInquiry(data) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/inquiry/program/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        full_name: data.full_name,
+        phone: data.phone,
+        email: data.email || "",
+        program: data.program, // program ID
+        message: data.message || "",
+      }),
+    })
+
+    if (!res.ok) {
+      const errorData = await res.json()
+      throw errorData
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("Program inquiry failed:", error)
+    throw error
+  }
+}
