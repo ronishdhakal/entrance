@@ -1,59 +1,61 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useParams } from "next/navigation"
 import Link from "next/link"
 import { Loader2, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { PracticeTopicFilter } from "@/components/question/PracticeTopicFilter"
 import { PracticeQuestionViewer } from "@/components/question/PracticeQuestionViewer"
-import { fetchSectionsByProgram, fetchAllQuestions } from "@/utils/admin-api"
+import {
+  fetchPrograms,
+  fetchSectionsByProgram,
+  fetchAllQuestions,
+} from "@/utils/admin-api"
 
 export default function PracticePage() {
-  const params = useParams()
-  const router = useRouter()
+  const { programSlug, sectionId } = useParams()
+  const sectionIdNum = Number(sectionId)
 
-  const programSlug = params.programSlug
-  const sectionId = Number.parseInt(params.sectionId)
-
-  const [sections, setSections] = useState([])
-  const [allQuestions, setAllQuestions] = useState([])
-  const [filteredQuestions, setFilteredQuestions] = useState([])
   const [currentSection, setCurrentSection] = useState(null)
+  const [questions, setQuestions] = useState([])
+  const [filteredQuestions, setFilteredQuestions] = useState([])
+  const [filters, setFilters] = useState({ topic: null, sub_topic: null })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [filters, setFilters] = useState({ topic: null, sub_topic: null })
-
-  // Get program ID from slug (you may need to adjust based on your API)
-  const [programId, setProgramId] = useState(null)
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true)
 
-        // Fetch sections to find program ID
-        const sectionsData = await fetchSectionsByProgram(1) // Will need to get actual program ID
-        setSections(sectionsData)
+        // 1️⃣ Fetch all programs
+        const programs = await fetchPrograms()
+        const program = programs.find((p) => p.slug === programSlug)
 
-        const section = sectionsData.find((s) => s.id === sectionId)
+        if (!program) {
+          setError("Program not found")
+          return
+        }
+
+        // 2️⃣ Fetch sections of this program
+        const sections = await fetchSectionsByProgram(program.id)
+        const section = sections.find((s) => s.id === sectionIdNum)
+
         if (!section) {
           setError("Section not found")
           return
         }
 
         setCurrentSection(section)
-        setProgramId(section.program)
 
-        // Fetch all questions for this section
-        const questionsData = await fetchAllQuestions({
-          section: sectionId,
-        })
-        setAllQuestions(questionsData || [])
-        setFilteredQuestions(questionsData || [])
+        // 3️⃣ Fetch questions of this section
+        const qs = await fetchAllQuestions({ section: sectionIdNum })
+        setQuestions(qs || [])
+        setFilteredQuestions(qs || [])
       } catch (err) {
-        console.error("Error loading practice data:", err)
+        console.error("Practice page load error:", err)
         setError("Failed to load practice questions")
       } finally {
         setLoading(false)
@@ -61,26 +63,22 @@ export default function PracticePage() {
     }
 
     loadData()
-  }, [sectionId])
+  }, [programSlug, sectionIdNum])
 
-  // Apply topic/subtopic filters
+  // 🔍 Apply topic / sub-topic filters
   useEffect(() => {
-    let filtered = allQuestions
+    let result = questions
 
     if (filters.topic) {
-      filtered = filtered.filter((q) => q.topic === filters.topic)
+      result = result.filter((q) => q.topic === filters.topic)
     }
 
     if (filters.sub_topic) {
-      filtered = filtered.filter((q) => q.sub_topic === filters.sub_topic)
+      result = result.filter((q) => q.sub_topic === filters.sub_topic)
     }
 
-    setFilteredQuestions(filtered)
-  }, [filters, allQuestions])
-
-  const handleFilter = (newFilters) => {
-    setFilters(newFilters)
-  }
+    setFilteredQuestions(result)
+  }, [filters, questions])
 
   if (loading) {
     return (
@@ -95,7 +93,9 @@ export default function PracticePage() {
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-6 max-w-md">
           <h2 className="text-lg font-semibold mb-2">Error</h2>
-          <p className="text-muted-foreground mb-4">{error || "Section not found"}</p>
+          <p className="text-muted-foreground mb-4">
+            {error || "Section not found"}
+          </p>
           <Button asChild>
             <Link href={`/program/${programSlug}`}>
               <ArrowLeft className="mr-2 size-4" />
@@ -112,7 +112,9 @@ export default function PracticePage() {
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-6 max-w-md">
           <h2 className="text-lg font-semibold mb-2">No Questions</h2>
-          <p className="text-muted-foreground mb-4">No questions available for the selected filters</p>
+          <p className="text-muted-foreground mb-4">
+            No questions available for this section.
+          </p>
           <Button asChild>
             <Link href={`/program/${programSlug}`}>
               <ArrowLeft className="mr-2 size-4" />
@@ -136,24 +138,32 @@ export default function PracticePage() {
             </Link>
           </Button>
 
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Practice - {currentSection?.title}</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">
+            Practice – {currentSection.title}
+          </h1>
           <p className="text-muted-foreground">
-            {filteredQuestions.length} question{filteredQuestions.length !== 1 ? "s" : ""} available
+            {filteredQuestions.length} question
+            {filteredQuestions.length !== 1 && "s"}
           </p>
         </div>
 
-        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Filter Sidebar */}
+          {/* Filters */}
           <div className="lg:col-span-1">
             <div className="sticky top-4">
-              <PracticeTopicFilter sectionId={sectionId} onFilter={handleFilter} />
+              <PracticeTopicFilter
+                sectionId={sectionIdNum}
+                onFilter={setFilters}
+              />
             </div>
           </div>
 
-          {/* Question Viewer */}
+          {/* Questions */}
           <div className="lg:col-span-3">
-            <PracticeQuestionViewer questions={filteredQuestions} sectionTitle={currentSection?.title} />
+            <PracticeQuestionViewer
+              questions={filteredQuestions}
+              sectionTitle={currentSection.title}
+            />
           </div>
         </div>
       </div>

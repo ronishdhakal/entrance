@@ -199,6 +199,13 @@ export default function AdminDashboard() {
               <Plus className="w-4 h-4" />
               Create Test
             </Link>
+            <Link
+              href="/admin/question"
+              className="flex items-center gap-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              <Plus className="w-4 h-4" />
+              Manage Section Questions
+            </Link>
           </div>
         </div>
 

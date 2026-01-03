@@ -4,7 +4,11 @@ import { useState, useEffect } from "react"
 import { submitCollegeInquiry, fetchCourses } from "@/utils/api"
 import { isAuthenticated, getCurrentUser } from "@/lib/auth"
 
-export default function CollegeInquiry({ college, defaultCourseId = "" }) {
+export default function CollegeInquiry({
+  college,
+  defaultCourseId = "",
+  onSuccess, // ✅ callback to close modal
+}) {
   const [courses, setCourses] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -35,7 +39,7 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
         const data = await fetchCourses()
         const list = Array.isArray(data) ? data : data?.results || []
         setCourses(list)
-      } catch (err) {
+      } catch {
         console.error("Failed to load courses")
       }
     }
@@ -88,11 +92,10 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
 
       setSuccess(true)
 
-      // Optional: reset message only
-      setForm((prev) => ({
-        ...prev,
-        message: "",
-      }))
+      // ✅ Close modal after short confirmation
+      setTimeout(() => {
+        onSuccess?.()
+      }, 600)
     } catch (err) {
       console.error(err)
       setError("Failed to submit inquiry. Please try again.")
@@ -182,9 +185,7 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
       </div>
 
       {/* Error */}
-      {error && (
-        <p className="text-sm text-red-600 font-medium">{error}</p>
-      )}
+      {error && <p className="text-sm text-red-600 font-medium">{error}</p>}
 
       {/* Success */}
       {success && (
