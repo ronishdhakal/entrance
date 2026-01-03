@@ -147,3 +147,229 @@ export const fetchMockTestStats = async () => {
     throw error
   }
 }
+
+// ===========================
+// PROGRAMS (NEW)
+// ===========================
+
+export const fetchPrograms = async () => {
+  try {
+    const url = `${API_URL}/programs/`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    throw new Error("Failed to fetch programs")
+  } catch (error) {
+    console.error("Error fetching programs:", error)
+    return []
+  }
+}
+
+// ===========================
+// QUESTION BANK CRUD
+// ===========================
+
+export const fetchProgramHierarchy = async (programId) => {
+  try {
+    const url = `${API_URL}/question/hierarchy/${programId}/`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    throw new Error("Failed to fetch hierarchy")
+  } catch (error) {
+    console.error("Error fetching hierarchy:", error)
+    throw error
+  }
+}
+
+export const fetchAllQuestions = async (filters = {}) => {
+  try {
+    const params = new URLSearchParams()
+
+    // Convert string values to numbers and add to params
+    if (filters.program) params.append("program", String(filters.program))
+    if (filters.section) params.append("section", String(filters.section))
+    if (filters.topic) params.append("topic", String(filters.topic))
+    if (filters.sub_topic) params.append("sub_topic", String(filters.sub_topic))
+
+    const url = `${API_URL}/question/questions/${params.toString() ? "?" + params.toString() : ""}`
+    console.log("[v0] Fetching questions from:", url)
+
+    const response = await fetchWithAuth(url)
+    if (response.ok) {
+      const data = await response.json()
+      console.log("[v0] Questions fetched:", data)
+      return data
+    }
+    throw new Error("Failed to fetch questions")
+  } catch (error) {
+    console.error("Error fetching questions:", error)
+    return []
+  }
+}
+
+export const fetchSectionsByProgram = async (programId) => {
+  try {
+    const url = `${API_URL}/question/sections/?program=${programId}`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    return []
+  } catch (error) {
+    console.error("Error fetching sections:", error)
+    return []
+  }
+}
+
+export const fetchTopicsBySection = async (sectionId) => {
+  try {
+    const url = `${API_URL}/question/topics/?section=${sectionId}`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    return []
+  } catch (error) {
+    console.error("Error fetching topics:", error)
+    return []
+  }
+}
+
+export const fetchSubTopicsByTopic = async (topicId) => {
+  try {
+    const url = `${API_URL}/question/subtopics/?topic=${topicId}`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    return []
+  } catch (error) {
+    console.error("Error fetching subtopics:", error)
+    return []
+  }
+}
+
+export const fetchQuestionById = async (id) => {
+  try {
+    const url = `${API_URL}/question/questions/${id}/`
+    const response = await fetchWithAuth(url)
+    if (response.ok) return await response.json()
+    throw new Error("Failed to fetch question")
+  } catch (error) {
+    console.error("Error fetching question:", error)
+    throw error
+  }
+}
+
+export const createQuestion = async (data) => {
+  try {
+    const url = `${API_URL}/question/questions/`
+    const response = await fetchWithAuth(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+    if (response.ok) return await response.json()
+    const errorData = await response.json()
+    throw new Error(JSON.stringify(errorData))
+  } catch (error) {
+    console.error("Error creating question:", error)
+    throw error
+  }
+}
+
+export const updateQuestion = async (id, data) => {
+  try {
+    const url = `${API_URL}/question/questions/${id}/`
+    const response = await fetchWithAuth(url, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    })
+    if (response.ok) return await response.json()
+    const errorData = await response.json()
+    throw new Error(JSON.stringify(errorData))
+  } catch (error) {
+    console.error("Error updating question:", error)
+    throw error
+  }
+}
+
+export const deleteQuestion = async (id) => {
+  try {
+    const url = `${API_URL}/question/questions/${id}/`
+    const response = await fetchWithAuth(url, {
+      method: "DELETE",
+    })
+    return response.ok || response.status === 204
+  } catch (error) {
+    console.error("Error deleting question:", error)
+    throw error
+  }
+}
+
+export const createSection = async (data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/sections/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to create section")
+}
+
+export const createTopic = async (data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/topics/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to create topic")
+}
+
+export const createSubTopic = async (data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/subtopics/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to create sub-topic")
+}
+
+export const updateSection = async (id, data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/sections/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to update section")
+}
+
+export const updateTopic = async (id, data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/topics/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to update topic")
+}
+
+export const updateSubTopic = async (id, data) => {
+  const response = await fetchWithAuth(`${API_URL}/question/subtopics/${id}/`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  })
+  if (response.ok) return await response.json()
+  throw new Error("Failed to update sub-topic")
+}
+
+export const deleteSection = async (id) => {
+  const response = await fetchWithAuth(`${API_URL}/question/sections/${id}/`, {
+    method: "DELETE",
+  })
+  return response.ok || response.status === 204
+}
+
+export const deleteTopic = async (id) => {
+  const response = await fetchWithAuth(`${API_URL}/question/topics/${id}/`, {
+    method: "DELETE",
+  })
+  return response.ok || response.status === 204
+}
+
+export const deleteSubTopic = async (id) => {
+  const response = await fetchWithAuth(`${API_URL}/question/subtopics/${id}/`, {
+    method: "DELETE",
+  })
+  return response.ok || response.status === 204
+}

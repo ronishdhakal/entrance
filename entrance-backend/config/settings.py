@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "apps.university",
     "apps.advertisement",
     "apps.inquiry",
+    "apps.question",
 ]
 
 # =========================

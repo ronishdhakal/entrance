@@ -10,19 +10,20 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import ProgramHeader from "@/components/program/ProgramHeader"
 import ProgramMockTests from "@/components/program/ProgramMockTests"
+import { PracticeSections } from "@/components/question/PracticeSections"
 import ProgramInquiry from "@/components/inquiry/ProgramInquiry"
 
 import { API_URL } from "@/lib/api-config"
+import { fetchSectionsByProgram } from "@/utils/admin-api"
 
 export default function ProgramDetailPage() {
   const { slug } = useParams()
 
   const [program, setProgram] = useState(null)
+  const [sections, setSections] = useState([])
   const [mockTests, setMockTests] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-
-  // ✅ Inquiry popup state
   const [showInquiry, setShowInquiry] = useState(false)
 
   useEffect(() => {
@@ -37,14 +38,14 @@ export default function ProgramDetailPage() {
         const programData = await programResponse.json()
         setProgram(programData)
 
-        const mockTestsResponse = await fetch(
-          `${API_URL}/mocktests/?program=${programData.id}`
-        )
-
+        const mockTestsResponse = await fetch(`${API_URL}/mocktests/?program=${programData.id}`)
         if (mockTestsResponse.ok) {
           const mockTestsData = await mockTestsResponse.json()
           setMockTests(mockTestsData)
         }
+
+        const sectionsData = await fetchSectionsByProgram(programData.id)
+        setSections(sectionsData)
       } catch (err) {
         setError(err.message)
       } finally {
@@ -77,9 +78,7 @@ export default function ProgramDetailPage() {
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-muted-foreground">
-              Loading program details...
-            </p>
+            <p className="text-muted-foreground">Loading program details...</p>
           </div>
         </div>
       )}
@@ -89,9 +88,7 @@ export default function ProgramDetailPage() {
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <h2 className="text-2xl font-bold mb-2">Program Not Found</h2>
-            <p className="text-muted-foreground mb-4">
-              {error || "The program you're looking for doesn't exist."}
-            </p>
+            <p className="text-muted-foreground mb-4">{error || "The program you're looking for doesn't exist."}</p>
             <Link href="/" className="text-primary hover:underline">
               Go back to home
             </Link>
@@ -107,8 +104,7 @@ export default function ProgramDetailPage() {
           {/* CTA */}
           <section className="max-w-4xl mx-auto px-4 mt-6 text-center">
             <p className="text-gray-600 mb-4">
-              Confused about eligibility, syllabus, or preparation strategy for{" "}
-              <strong>{program.title}</strong>?
+              Confused about eligibility, syllabus, or preparation strategy for <strong>{program.title}</strong>?
             </p>
 
             <button
@@ -119,16 +115,23 @@ export default function ProgramDetailPage() {
             </button>
           </section>
 
+          {sections.length > 0 && (
+            <section className="py-8">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <PracticeSections sections={sections} programSlug={slug} />
+              </div>
+            </section>
+          )}
+
           <ProgramMockTests mockTests={mockTests} />
           <Footer />
         </>
       )}
 
-      {/* ✅ PROGRAM INQUIRY MODAL */}
+      {/* INQUIRY MODAL */}
       {showInquiry && program && (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
           <div className="relative bg-white w-full max-w-lg rounded-xl p-6">
-            {/* Close button */}
             <button
               onClick={() => setShowInquiry(false)}
               className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"

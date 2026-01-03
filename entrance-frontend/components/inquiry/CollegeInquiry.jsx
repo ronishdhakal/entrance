@@ -6,6 +6,9 @@ import { isAuthenticated, getCurrentUser } from "@/lib/auth"
 
 export default function CollegeInquiry({ college, defaultCourseId = "" }) {
   const [courses, setCourses] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false)
 
   const [form, setForm] = useState({
     full_name: "",
@@ -15,7 +18,7 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
     message: "",
   })
 
-  /* ✅ Keep course in sync (from course page) */
+  /* ✅ Keep course in sync */
   useEffect(() => {
     if (defaultCourseId) {
       setForm((prev) => ({
@@ -25,33 +28,37 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
     }
   }, [defaultCourseId])
 
-  /* ✅ Load all courses */
+  /* ✅ Load courses */
   useEffect(() => {
     const loadCourses = async () => {
-      const data = await fetchCourses()
-      const list = Array.isArray(data) ? data : data?.results || []
-      setCourses(list)
+      try {
+        const data = await fetchCourses()
+        const list = Array.isArray(data) ? data : data?.results || []
+        setCourses(list)
+      } catch (err) {
+        console.error("Failed to load courses")
+      }
     }
     loadCourses()
   }, [])
 
-  /* ✅ AUTO-FILL USER DATA IF LOGGED IN */
+  /* ✅ Auto-fill logged-in user */
   useEffect(() => {
     const autofillUser = async () => {
-      if (isAuthenticated()) {
-        try {
-          const user = await getCurrentUser()
-          if (user) {
-            setForm((prev) => ({
-              ...prev,
-              full_name: user.full_name || "",
-              email: user.email || "",
-              phone: user.phone || "",
-            }))
-          }
-        } catch (err) {
-          console.error("Failed to load user info")
+      if (!isAuthenticated()) return
+
+      try {
+        const user = await getCurrentUser()
+        if (user) {
+          setForm((prev) => ({
+            ...prev,
+            full_name: user.full_name || "",
+            email: user.email || "",
+            phone: user.phone || "",
+          }))
         }
+      } catch {
+        console.warn("Could not auto-fill user info")
       }
     }
 
@@ -59,17 +66,39 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
   }, [])
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError(null)
+    setSuccess(false)
 
-    await submitCollegeInquiry({
-      ...form,
-      college: college.id,
-      course: form.course ? Number(form.course) : null,
-    })
+    try {
+      setLoading(true)
+
+      await submitCollegeInquiry({
+        ...form,
+        college: college.id,
+        course: form.course ? Number(form.course) : null,
+      })
+
+      setSuccess(true)
+
+      // Optional: reset message only
+      setForm((prev) => ({
+        ...prev,
+        message: "",
+      }))
+    } catch (err) {
+      console.error(err)
+      setError("Failed to submit inquiry. Please try again.")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -87,8 +116,8 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
           name="full_name"
           value={form.full_name}
           onChange={handleChange}
-          placeholder="your full name"
           required
+          placeholder="your full name"
           className="inline-block min-w-[180px] border-b border-gray-400 focus:outline-none focus:border-primary px-1 mx-1 bg-transparent"
         />
         .
@@ -105,7 +134,7 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
         >
           <option value="">Select a course</option>
           {courses.map((course) => (
-            <option key={course.id} value={String(course.id)}>
+            <option key={course.id} value={course.id}>
               {course.title}
             </option>
           ))}
@@ -120,8 +149,8 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
           name="phone"
           value={form.phone}
           onChange={handleChange}
-          placeholder="Phone number"
           required
+          placeholder="Phone number"
           className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
@@ -147,17 +176,30 @@ export default function CollegeInquiry({ college, defaultCourseId = "" }) {
           value={form.message}
           onChange={handleChange}
           rows={4}
-          placeholder="I want to inquire about....."
+          placeholder="I want to inquire about..."
           className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
         />
       </div>
 
+      {/* Error */}
+      {error && (
+        <p className="text-sm text-red-600 font-medium">{error}</p>
+      )}
+
+      {/* Success */}
+      {success && (
+        <p className="text-sm text-green-600 font-medium">
+          Inquiry submitted successfully 🎉
+        </p>
+      )}
+
       {/* Submit */}
       <button
         type="submit"
-        className="w-full bg-primary text-white py-3 rounded-md font-medium hover:opacity-90 transition"
+        disabled={loading}
+        className="w-full bg-primary text-white py-3 rounded-md font-medium hover:opacity-90 transition disabled:opacity-60"
       >
-        Submit Inquiry
+        {loading ? "Submitting..." : "Submit Inquiry"}
       </button>
     </form>
   )
