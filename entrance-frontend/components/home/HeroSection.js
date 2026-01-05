@@ -42,7 +42,7 @@ export default function HeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
-                href="/login"
+                href="/dashboard"
                 className="bg-primary text-white px-8 py-4 rounded-lg font-semibold hover:bg-blue-600 transition-all flex items-center justify-center space-x-2 shadow-lg shadow-primary/30"
               >
                 <span>Start Practicing Now</span>

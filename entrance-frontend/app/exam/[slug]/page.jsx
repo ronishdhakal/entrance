@@ -39,16 +39,16 @@ export default async function ExamDetailPage(props) {
         {/* Header */}
         <ExamHeader exam={exam} />
 
-        {/* Content */}
-        <section className="max-w-7xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <ExamTopDescription description={exam.top_description} />
-              <ExamDetails detail={exam.detail} />
-            </div>
-            <div className="lg:col-span-1">
-              <ExamInfo exam={exam} />
-            </div>
+        {/* Info section directly below header */}
+        <section className="max-w-7xl mx-auto px-4 py-6">
+          <ExamInfo exam={exam} />
+        </section>
+
+        {/* Body content */}
+        <section className="max-w-7xl mx-auto px-4 pb-10">
+          <div className="grid grid-cols-1">
+            <ExamTopDescription description={exam.top_description} />
+            <ExamDetails detail={exam.detail} />
           </div>
         </section>
       </main>

@@ -88,10 +88,10 @@ export default function Navbar() {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
               <Link href="/#programs" className="text-gray-700 hover:text-primary">
-                Programs
+                Mock Tests
               </Link>
               <Link href="/exam" className="text-gray-700 hover:text-primary">
-                Exams
+                Entrance
               </Link>
               <Link href="/book" className="text-gray-700 hover:text-primary">
                 Books
@@ -153,10 +153,10 @@ export default function Navbar() {
             <div className="md:hidden py-4 border-t border-gray-200">
               <div className="flex flex-col space-y-4">
                 <Link href="/#programs" onClick={() => setIsMenuOpen(false)}>
-                  Programs
+                  Mock Tests
                 </Link>
                 <Link href="/exam" onClick={() => setIsMenuOpen(false)}>
-                  Exams
+                  Entrance
                 </Link>
                 <Link href="/book" onClick={() => setIsMenuOpen(false)}>
                   Books
