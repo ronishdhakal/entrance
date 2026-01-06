@@ -2,6 +2,17 @@ import Link from "next/link"
 import { BookOpen, Code, Calculator, Brain, ArrowRight } from "lucide-react"
 
 const programs = [
+    {
+    id: "bsc-csit",
+    title: "BSc CSIT",
+    fullName: "Bachelor of Science in Computer Science and IT",
+    icon: Calculator,
+    description: "Extensive question bank with Physics, Chemistry, Mathematics, and Computer Science.",
+    sections: ["English", "GK", "Physics", "Chemistry", "Math", "Computer"],
+    color: "bg-green-500",
+    bgColor: "bg-green-50",
+    textColor: "text-green-600",
+  },
   {
     id: "bit",
     title: "BIT",
@@ -24,17 +35,7 @@ const programs = [
     bgColor: "bg-purple-50",
     textColor: "text-purple-600",
   },
-  {
-    id: "bsc-csit",
-    title: "BSc CSIT",
-    fullName: "Bachelor of Science in Computer Science and IT",
-    icon: Calculator,
-    description: "Extensive question bank with Physics, Chemistry, Mathematics, and Computer Science.",
-    sections: ["English", "GK", "Physics", "Chemistry", "Math", "Computer"],
-    color: "bg-green-500",
-    bgColor: "bg-green-50",
-    textColor: "text-green-600",
-  },
+
   {
     id: "cmat",
     title: "CMAT",
@@ -50,7 +51,7 @@ const programs = [
 
 export default function ProgramsSection() {
   return (
-    <section id="programs" className="py-20 bg-white">
+    <section id="programs" className="py-5 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
@@ -61,7 +62,7 @@ export default function ProgramsSection() {
         </div>
 
         {/* Programs Grid */}
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid md:grid-cols-2 gap-4 lg:gap-4">
           {programs.map((program) => {
             const Icon = program.icon
             return (
