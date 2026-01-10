@@ -6,7 +6,7 @@ import { fetchBooks } from "@/utils/api"
 export const dynamic = "force-dynamic"
 
 export const metadata = {
-  title: "Books - Entrance Prep by College Info Nepal",
+  title: "IT Entrance Preparation Books - Entrance Prep by College Info Nepal",
   description: "Browse our collection of entrance exam preparation books",
 }
 
