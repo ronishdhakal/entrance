@@ -448,33 +448,6 @@ export async function fetchAdvertisements({ placement } = {}) {
   }
 }
 
-/**
- * Fetch featured advertisements (text + link)
- * Backend endpoint: /api/advertisement/featured/
- */
-export async function fetchFeaturedAd() {
-  try {
-    const res = await fetch(
-      `${API_BASE_URL}/advertisement/featured/`,
-      {
-        cache: "no-store",
-      }
-    )
-
-    if (!res.ok) {
-      console.error("FeaturedAd API error:", res.status)
-      return null
-    }
-
-    const data = await res.json()
-
-    // API returns a list → use latest active one
-    return Array.isArray(data) && data.length > 0 ? data[0] : null
-  } catch (error) {
-    console.error("fetchFeaturedAd network error:", error)
-    return null
-  }
-}
 
 // ================================
 // COLLEGE INQUIRY
@@ -536,46 +509,5 @@ export async function submitProgramInquiry(data) {
   } catch (error) {
     console.error("Program inquiry failed:", error)
     throw error
-  }
-}
-
-
-/* =========================
-   QUESTION BANK (PUBLIC)
-========================= */
-
-export const fetchPublicSectionsByProgram = async (programId) => {
-  if (!programId) return []
-
-  try {
-    const res = await fetch(
-      `${API_URL}/question/sections/?program=${programId}`,
-      { cache: "no-store" }
-    )
-
-    if (res.ok) return await res.json()
-    return []
-  } catch (error) {
-    console.error("Error fetching public sections:", error)
-    return []
-  }
-}
-
-export const fetchPublicQuestionCount = async (sectionId) => {
-  if (!sectionId) return 0
-
-  try {
-    const res = await fetch(
-      `${API_URL}/question/questions/?section=${sectionId}`,
-      { cache: "no-store" }
-    )
-
-    if (!res.ok) return 0
-
-    const data = await res.json()
-    return Array.isArray(data) ? data.length : 0
-  } catch (error) {
-    console.error("Error fetching public question count:", error)
-    return 0
   }
 }

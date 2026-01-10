@@ -1,42 +1,40 @@
-"use client"
+"use client";
 
-import Head from "next/head"
-import Script from "next/script"
-import Link from "next/link"
-import Image from "next/image"
-import { useState, useEffect } from "react"
-import { Menu, X, User, LogOut } from "lucide-react"
-import { isAuthenticated, getCurrentUser, logout } from "@/lib/auth"
-import { useRouter } from "next/navigation"
-
-import FeaturedAds from "@/components/ads/FeaturedAds"
+import Head from "next/head";
+import Script from "next/script";
+import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { isAuthenticated, getCurrentUser, logout } from "@/lib/auth";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
-  const router = useRouter()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [user, setUser] = useState(null)
+  const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const loggedIn = isAuthenticated()
-      setIsLoggedIn(loggedIn)
+      const loggedIn = isAuthenticated();
+      setIsLoggedIn(loggedIn);
 
       if (loggedIn) {
-        const userData = await getCurrentUser()
-        setUser(userData)
+        const userData = await getCurrentUser();
+        setUser(userData);
       }
-    }
+    };
 
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   const handleLogout = () => {
-    logout()
-    setIsLoggedIn(false)
-    setUser(null)
-    router.push("/login")
-  }
+    logout();
+    setIsLoggedIn(false);
+    setUser(null);
+    router.push("/login");
+  };
 
   return (
     <>
@@ -51,7 +49,7 @@ export default function Navbar() {
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        {/* Google Search Console */}
+        {/* ✅ Google Search Console Verification */}
         <meta
           name="google-site-verification"
           content="In_u6RGEpUbj3PhoaLjXNsloEjIUZ2cXTcYqfLi_iYU"
@@ -166,6 +164,9 @@ export default function Navbar() {
                 <Link href="/college" onClick={() => setIsMenuOpen(false)}>
                   Colleges
                 </Link>
+                <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
+                  Features
+                </Link>
                 <Link href="/#about" onClick={() => setIsMenuOpen(false)}>
                   About
                 </Link>
@@ -182,8 +183,8 @@ export default function Navbar() {
                       </p>
                       <button
                         onClick={() => {
-                          handleLogout()
-                          setIsMenuOpen(false)
+                          handleLogout();
+                          setIsMenuOpen(false);
                         }}
                         className="flex items-center gap-2 text-red-600"
                       >
@@ -211,9 +212,6 @@ export default function Navbar() {
           )}
         </div>
       </nav>
-
-      {/* ===== FEATURED ADS (AFTER NAVBAR) ===== */}
-      <FeaturedAds />
     </>
-  )
+  );
 }
