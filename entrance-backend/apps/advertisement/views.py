@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView
-from .models import Advertisement
-from .serializers import AdvertisementSerializer
+from .models import Advertisement, TextAd
+from .serializers import AdvertisementSerializer, TextAdSerializer
 
 
 class AdvertisementListView(ListAPIView):
@@ -14,3 +14,11 @@ class AdvertisementListView(ListAPIView):
             queryset = queryset.filter(placement=placement)
 
         return queryset
+
+
+# ✅ Text Ad View (returns active text ads)
+class TextAdListView(ListAPIView):
+    serializer_class = TextAdSerializer
+
+    def get_queryset(self):
+        return TextAd.objects.filter(is_active=True)

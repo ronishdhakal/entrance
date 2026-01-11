@@ -29,11 +29,12 @@ export default function AdsPlacement() {
   if (loading || ads.length === 0) return null
 
   return (
-    <div className="w-full px-4 sm:px-6 my-4">
+    <div className="w-full px-4 sm:px-6 my-2">
       <div
         className="
-          grid grid-cols-2 gap-4
-          sm:grid-cols-2
+          grid grid-cols-2
+          gap-2
+          sm:gap-3
           md:grid-cols-4
         "
       >
@@ -51,7 +52,7 @@ export default function AdsPlacement() {
               rel="noopener noreferrer"
               className="
                 block w-full
-                overflow-hidden rounded-md
+                overflow-hidden rounded
                 hover:opacity-90 transition
               "
             >

@@ -1,70 +1,105 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import Link from "next/link"
 import Image from "next/image"
-import { fetchFeaturedAd } from "@/utils/api"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { fetchTextAds } from "@/utils/api"
 
 export default function FeaturedAds() {
-  const [featuredAd, setFeaturedAd] = useState(null)
+  const [textAd, setTextAd] = useState(null)
 
   useEffect(() => {
-    const loadAd = async () => {
-      const data = await fetchFeaturedAd()
-      setFeaturedAd(data)
+    async function loadAds() {
+      const data = await fetchTextAds()
+      if (Array.isArray(data) && data.length > 0) {
+        setTextAd(data[0])
+      }
     }
-    loadAd()
+
+    loadAds()
   }, [])
 
-  if (!featuredAd) return null
+  if (!textAd) return null
 
   return (
-    <div className="w-full py-8 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <AdCard
-          text={featuredAd.ad_one_text}
-          url={featuredAd.ad_one_url}
-          buttonText="Apply Now"
-        />
+    <section className="bg-white border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-        <AdCard
-          text={featuredAd.ad_two_text}
-          url={featuredAd.ad_two_url}
-          buttonText="Get Started"
-        />
+          {/* ===== Ad 1 ===== */}
+          <div className="relative h-18 sm:h-20 rounded-lg overflow-hidden">
+            <Image
+              src="/assets/adbackground.jpg"
+              alt={textAd.title_1}
+              fill
+              className="object-cover scale-105 blur-[1.5px]"
+              priority
+            />
+
+            {/* Gradient overlay for readability */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
+              <div className="flex w-full items-center justify-between px-5">
+
+                {/* Text */}
+                <div className="flex-1 text-center">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white leading-snug drop-shadow-sm">
+                    {textAd.title_1}
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-100 leading-snug drop-shadow-sm">
+                    {textAd.description_1}
+                  </p>
+                </div>
+
+                {/* CTA */}
+                <Link
+                  href={textAd.link_1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium transition shadow-sm"
+                >
+                  Apply Now
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* ===== Ad 2 ===== */}
+          <div className="relative h-18 sm:h-20 rounded-lg overflow-hidden">
+            <Image
+              src="/assets/adbackground.jpg"
+              alt={textAd.title_2}
+              fill
+              className="object-cover scale-105 blur-[1.5px]"
+            />
+
+            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
+              <div className="flex w-full items-center justify-between px-5">
+
+                {/* Text */}
+                <div className="flex-1 text-center">
+                  <h3 className="text-lg sm:text-xl font-semibold text-white leading-snug drop-shadow-sm">
+                    {textAd.title_2}
+                  </h3>
+                  <p className="text-sm sm:text-base text-gray-100 leading-snug drop-shadow-sm">
+                    {textAd.description_2}
+                  </p>
+                </div>
+
+                {/* CTA */}
+                <Link
+                  href={textAd.link_2}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium transition shadow-sm"
+                >
+                  Apply Now
+                </Link>
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
-    </div>
-  )
-}
-
-function AdCard({ text, url, buttonText }) {
-  return (
-    <div className="relative h-40 md:h-44 rounded-xl overflow-hidden">
-      {/* Background */}
-      <Image
-        src="/assets/adbackground.jpg"
-        alt="Advertisement"
-        fill
-        className="object-cover"
-        priority
-      />
-
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/40" />
-
-      {/* Content */}
-      <div className="absolute inset-0 flex items-center justify-between px-6">
-        <h3 className="text-white text-xl md:text-2xl font-semibold max-w-[70%]">
-          {text}
-        </h3>
-
-        <Link
-          href={url}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-md transition"
-        >
-          {buttonText}
-        </Link>
-      </div>
-    </div>
+    </section>
   )
 }

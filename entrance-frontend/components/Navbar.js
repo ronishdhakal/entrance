@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, User, LogOut } from "lucide-react";
 import { isAuthenticated, getCurrentUser, logout } from "@/lib/auth";
 import { useRouter } from "next/navigation";
+import FeaturedAds from "@/components/ads/FeaturedAds";
 
 export default function Navbar() {
   const router = useRouter();
@@ -99,9 +100,9 @@ export default function Navbar() {
               <Link href="/college" className="text-gray-700 hover:text-primary">
                 Colleges
               </Link>
-              <Link href="/#about" className="text-gray-700 hover:text-primary">
+              {/* <Link href="/#about" className="text-gray-700 hover:text-primary">
                 About
-              </Link>
+              </Link> */}
 
               {isLoggedIn ? (
                 <>
@@ -164,12 +165,12 @@ export default function Navbar() {
                 <Link href="/college" onClick={() => setIsMenuOpen(false)}>
                   Colleges
                 </Link>
-                <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
+                {/* <Link href="/#features" onClick={() => setIsMenuOpen(false)}>
                   Features
-                </Link>
-                <Link href="/#about" onClick={() => setIsMenuOpen(false)}>
+                </Link> */}
+                {/* <Link href="/#about" onClick={() => setIsMenuOpen(false)}>
                   About
-                </Link>
+                </Link> */}
 
                 {isLoggedIn ? (
                   <>
@@ -212,6 +213,9 @@ export default function Navbar() {
           )}
         </div>
       </nav>
+
+      {/* ===== FEATURED ADS ===== */}
+      <FeaturedAds />
     </>
   );
 }

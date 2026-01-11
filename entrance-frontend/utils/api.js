@@ -418,7 +418,6 @@ export const fetchCollegeBySlug = async (slug) => {
   }
 }
 
-
 /**
  * Fetch advertisements
  * @param {Object} params
@@ -444,6 +443,30 @@ export async function fetchAdvertisements({ placement } = {}) {
     return await res.json()
   } catch (error) {
     console.error("fetchAdvertisements error:", error)
+    return []
+  }
+}
+
+
+/**
+ * Fetch text advertisements (two text ads in one record)
+ * @returns {Promise<Array>}
+ */
+export async function fetchTextAds() {
+  try {
+    const url = `${API_BASE_URL}/advertisement/text/`
+
+    const res = await fetch(url, {
+      cache: "no-store",
+    })
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch text ads")
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("fetchTextAds error:", error)
     return []
   }
 }

@@ -46,3 +46,28 @@ class Advertisement(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_placement_display()})"
+
+
+# ✅ TEXT ADS (TWO TEXT BLOCKS IN ONE RECORD)
+class TextAd(models.Model):
+
+    # Text Ad 1
+    title_1 = models.CharField(max_length=200)
+    description_1 = models.TextField()
+    link_1 = models.URLField()
+
+    # Text Ad 2
+    title_2 = models.CharField(max_length=200)
+    description_2 = models.TextField()
+    link_2 = models.URLField()
+
+    is_active = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Text Ads ({self.created_at.date()})"
