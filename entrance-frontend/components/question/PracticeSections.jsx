@@ -6,6 +6,8 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { BookOpen, Play, Loader2 } from "lucide-react"
 
+import { fetchPublicQuestionCount } from "@/utils/api"
+
 export function PracticeSections({ sections, programSlug }) {
   const [sectionsWithCounts, setSectionsWithCounts] = useState([])
   const [loading, setLoading] = useState(true)
@@ -18,34 +20,34 @@ export function PracticeSections({ sections, programSlug }) {
       }
 
       try {
-        // Import fetchAllQuestions dynamically to avoid circular dependencies
-        const { fetchAllQuestions } = await import("@/utils/admin-api")
-        
-        // Fetch question counts for all sections in parallel
-        const sectionsWithCountsPromises = sections.map(async (section) => {
-          try {
-            // Fetch questions for this section
-            const questions = await fetchAllQuestions({ section: section.id })
-            
-            return {
-              ...section,
-              question_count: questions?.length || 0
-            }
-          } catch (error) {
-            console.error(`Error fetching questions for section ${section.id}:`, error)
-            return {
-              ...section,
-              question_count: 0
-            }
-          }
-        })
+        const updatedSections = await Promise.all(
+          sections.map(async (section) => {
+            try {
+              const count = await fetchPublicQuestionCount(section.id)
 
-        const updatedSections = await Promise.all(sectionsWithCountsPromises)
+              return {
+                ...section,
+                question_count: count || 0,
+              }
+            } catch (error) {
+              console.error(
+                `Error fetching question count for section ${section.id}:`,
+                error
+              )
+              return {
+                ...section,
+                question_count: 0,
+              }
+            }
+          })
+        )
+
         setSectionsWithCounts(updatedSections)
       } catch (error) {
         console.error("Error fetching question counts:", error)
-        // Fallback to original sections with 0 counts
-        setSectionsWithCounts(sections.map(s => ({ ...s, question_count: 0 })))
+        setSectionsWithCounts(
+          sections.map((s) => ({ ...s, question_count: 0 }))
+        )
       } finally {
         setLoading(false)
       }
@@ -54,6 +56,7 @@ export function PracticeSections({ sections, programSlug }) {
     fetchQuestionCounts()
   }, [sections])
 
+  /* EMPTY STATE */
   if (!sections || sections.length === 0) {
     return (
       <div className="text-center py-12 border rounded-lg bg-muted/40">
@@ -65,11 +68,14 @@ export function PracticeSections({ sections, programSlug }) {
     )
   }
 
+  /* LOADING */
   if (loading) {
     return (
       <div className="text-center py-12">
         <Loader2 className="w-8 h-8 mx-auto mb-4 text-primary animate-spin" />
-        <p className="text-sm text-muted-foreground">Loading question counts...</p>
+        <p className="text-sm text-muted-foreground">
+          Loading question counts...
+        </p>
       </div>
     )
   }
@@ -126,8 +132,8 @@ export function PracticeSections({ sections, programSlug }) {
                 href={`/practice/${programSlug}/${section.id}`}
                 className="w-full"
               >
-                <Button 
-                  className="w-full" 
+                <Button
+                  className="w-full"
                   size="sm"
                   disabled={questionCount === 0}
                 >

@@ -14,7 +14,7 @@ import { PracticeSections } from "@/components/question/PracticeSections"
 import ProgramInquiry from "@/components/inquiry/ProgramInquiry"
 
 import { API_URL } from "@/lib/api-config"
-import { fetchSectionsByProgram } from "@/utils/admin-api"
+import { fetchPublicSectionsByProgram } from "@/utils/api"
 
 export default function ProgramDetailPage() {
   const { slug } = useParams()
@@ -33,21 +33,35 @@ export default function ProgramDetailPage() {
       try {
         setLoading(true)
 
-        const programResponse = await fetch(`${API_URL}/programs/${slug}/`)
-        if (!programResponse.ok) throw new Error("Program not found")
+        /* PROGRAM (PUBLIC) */
+        const programResponse = await fetch(
+          `${API_URL}/programs/${slug}/`,
+          { cache: "no-store" }
+        )
+
+        if (!programResponse.ok) {
+          throw new Error("Program not found")
+        }
+
         const programData = await programResponse.json()
         setProgram(programData)
 
-        const mockTestsResponse = await fetch(`${API_URL}/mocktests/?program=${programData.id}`)
+        /* MOCK TESTS (PUBLIC) */
+        const mockTestsResponse = await fetch(
+          `${API_URL}/mocktests/?program=${programData.id}`,
+          { cache: "no-store" }
+        )
+
         if (mockTestsResponse.ok) {
           const mockTestsData = await mockTestsResponse.json()
           setMockTests(mockTestsData)
         }
 
-        const sectionsData = await fetchSectionsByProgram(programData.id)
+        /* SECTIONS (PUBLIC — NO AUTH) */
+        const sectionsData = await fetchPublicSectionsByProgram(programData.id)
         setSections(sectionsData)
       } catch (err) {
-        setError(err.message)
+        setError(err.message || "Something went wrong")
       } finally {
         setLoading(false)
       }
@@ -78,7 +92,9 @@ export default function ProgramDetailPage() {
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
             <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-muted-foreground">Loading program details...</p>
+            <p className="text-muted-foreground">
+              Loading program details...
+            </p>
           </div>
         </div>
       )}
@@ -87,8 +103,13 @@ export default function ProgramDetailPage() {
       {!loading && (error || !program) && (
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
-            <h2 className="text-2xl font-bold mb-2">Program Not Found</h2>
-            <p className="text-muted-foreground mb-4">{error || "The program you're looking for doesn't exist."}</p>
+            <h2 className="text-2xl font-bold mb-2">
+              Program Not Found
+            </h2>
+            <p className="text-muted-foreground mb-4">
+              {error ||
+                "The program you're looking for doesn't exist."}
+            </p>
             <Link href="/" className="text-primary hover:underline">
               Go back to home
             </Link>
@@ -104,7 +125,8 @@ export default function ProgramDetailPage() {
           {/* CTA */}
           <section className="max-w-4xl mx-auto px-4 mt-6 text-center">
             <p className="text-gray-600 mb-4">
-              Confused about eligibility, syllabus, or preparation strategy for <strong>{program.title}</strong>?
+              Confused about eligibility, syllabus, or preparation
+              strategy for <strong>{program.title}</strong>?
             </p>
 
             <button
@@ -115,10 +137,14 @@ export default function ProgramDetailPage() {
             </button>
           </section>
 
+          {/* PRACTICE SECTIONS */}
           {sections.length > 0 && (
             <section className="py-8">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <PracticeSections sections={sections} programSlug={slug} />
+                <PracticeSections
+                  sections={sections}
+                  programSlug={slug}
+                />
               </div>
             </section>
           )}

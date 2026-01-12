@@ -534,3 +534,44 @@ export async function submitProgramInquiry(data) {
     throw error
   }
 }
+
+
+/* =========================
+   QUESTION BANK (PUBLIC)
+========================= */
+
+export const fetchPublicSectionsByProgram = async (programId) => {
+  if (!programId) return []
+
+  try {
+    const res = await fetch(
+      `${API_URL}/question/sections/?program=${programId}`,
+      { cache: "no-store" }
+    )
+
+    if (res.ok) return await res.json()
+    return []
+  } catch (error) {
+    console.error("Error fetching public sections:", error)
+    return []
+  }
+}
+
+export const fetchPublicQuestionCount = async (sectionId) => {
+  if (!sectionId) return 0
+
+  try {
+    const res = await fetch(
+      `${API_URL}/question/questions/?section=${sectionId}`,
+      { cache: "no-store" }
+    )
+
+    if (!res.ok) return 0
+
+    const data = await res.json()
+    return Array.isArray(data) ? data.length : 0
+  } catch (error) {
+    console.error("Error fetching public question count:", error)
+    return 0
+  }
+}
