@@ -27,35 +27,35 @@ export default function FeaturedAds() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
           {/* ===== Ad 1 ===== */}
-          <div className="relative h-18 sm:h-20 rounded-lg overflow-hidden">
+          <div className="relative min-h-[4.5rem] sm:min-h-[5rem] h-auto rounded-lg overflow-hidden">
             <Image
               src="/assets/adbackground.jpg"
-              alt={textAd.title_1}
+              alt={textAd.title_1 || "Featured ad"}
               fill
               className="object-cover scale-105 blur-[1.5px]"
               priority
             />
 
-            {/* Gradient overlay for readability */}
+            {/* Gradient overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
-              <div className="flex w-full items-center justify-between px-5">
+              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2 sm:py-0">
 
                 {/* Text */}
                 <div className="flex-1 text-center">
-                  <h3 className="text-lg sm:text-xl font-semibold text-white leading-snug drop-shadow-sm">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight sm:leading-snug drop-shadow-sm">
                     {textAd.title_1}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-100 leading-snug drop-shadow-sm">
+                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base text-gray-100 leading-tight sm:leading-snug drop-shadow-sm">
                     {textAd.description_1}
                   </p>
                 </div>
 
                 {/* CTA */}
                 <Link
-                  href={textAd.link_1}
+                  href={textAd.link_1 || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium transition shadow-sm"
+                  className="ml-4 sm:ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
                 >
                   Apply Now
                 </Link>
@@ -64,33 +64,33 @@ export default function FeaturedAds() {
           </div>
 
           {/* ===== Ad 2 ===== */}
-          <div className="relative h-18 sm:h-20 rounded-lg overflow-hidden">
+          <div className="relative min-h-[4.5rem] sm:min-h-[5rem] h-auto rounded-lg overflow-hidden md:h-[5rem]">
             <Image
               src="/assets/adbackground.jpg"
-              alt={textAd.title_2}
+              alt={textAd.title_2 || "Featured ad"}
               fill
               className="object-cover scale-105 blur-[1.5px]"
             />
 
             <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
-              <div className="flex w-full items-center justify-between px-5">
+              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2 sm:py-0">
 
                 {/* Text */}
                 <div className="flex-1 text-center">
-                  <h3 className="text-lg sm:text-xl font-semibold text-white leading-snug drop-shadow-sm">
+                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight sm:leading-snug drop-shadow-sm">
                     {textAd.title_2}
                   </h3>
-                  <p className="text-sm sm:text-base text-gray-100 leading-snug drop-shadow-sm">
+                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base text-gray-100 leading-tight sm:leading-snug drop-shadow-sm">
                     {textAd.description_2}
                   </p>
                 </div>
 
                 {/* CTA */}
                 <Link
-                  href={textAd.link_2}
+                  href={textAd.link_2 || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-5 py-2 rounded-md text-sm font-medium transition shadow-sm"
+                  className="ml-4 sm:ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
                 >
                   Apply Now
                 </Link>

@@ -29,16 +29,28 @@ export default async function CollegePage() {
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
-        {/* Header */}
+        {/* Header aligned with content */}
         <section className="pt-12 px-4 sm:px-6 lg:px-8">
           <div className="max-w-[1600px] mx-auto">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3">
-              Top IT Colleges in Nepal
-            </h1>
-            <p className="text-gray-600 max-w-3xl">
-              There are hundreds of Information Technology (IT) colleges in Nepal. These colleges are affiliated with different universities such as Tribhuvan University, Pokhara University, Far Western University, and other national and international institutions. 
-              hey offer a wide range of IT-related programs to meet the growing demand for skilled technology professionals in the country. Here, we are looking at the best IT Colleges in Nepal. 
-            </p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+              {/* Empty column to match sidebar width */}
+              <div className="hidden lg:block lg:col-span-3 xl:col-span-2" />
+
+              {/* Header content aligned with college grid */}
+              <div className="lg:col-span-9 xl:col-span-10">
+                <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900 mb-3">
+                  Top IT Colleges in Nepal
+                </h1>
+                <p className="text-gray-600 max-w-3xl leading-relaxed">
+                  There are hundreds of Information Technology (IT) colleges in Nepal.
+                  These colleges are affiliated with universities such as Tribhuvan University,
+                  Pokhara University, Far Western University, and other national and international
+                  institutions. They offer a wide range of IT-related programs to meet the growing
+                  demand for skilled technology professionals. Here, we highlight the best IT
+                  colleges in Nepal.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -58,7 +70,8 @@ export default async function CollegePage() {
                     Best IT Colleges in Nepal ({colleges.length})
                   </h2>
                   <p className="text-gray-600 mt-1">
-                    Browse through our comprehensive list of leading Information Technology (IT) colleges in Nepal.
+                    Browse through our comprehensive list of leading Information Technology (IT)
+                    colleges in Nepal.
                   </p>
                 </div>
 
