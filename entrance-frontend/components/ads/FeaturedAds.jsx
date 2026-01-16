@@ -26,8 +26,8 @@ export default function FeaturedAds() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-          {/* ===== Ad 1 ===== */}
-          <div className="relative min-h-[4.5rem] sm:min-h-[5rem] h-auto rounded-lg overflow-hidden">
+          {/* ================= Ad 1 ================= */}
+          <div className="relative min-h-[4rem] sm:min-h-[4.5rem] rounded-lg overflow-hidden">
             <Image
               src="/assets/adbackground.jpg"
               alt={textAd.title_1 || "Featured ad"}
@@ -36,16 +36,15 @@ export default function FeaturedAds() {
               priority
             />
 
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
-              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2 sm:py-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/45 to-black/30 flex items-center">
+              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2">
 
                 {/* Text */}
                 <div className="flex-1 text-center">
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight sm:leading-snug drop-shadow-sm">
+                  <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug drop-shadow-sm">
                     {textAd.title_1}
                   </h3>
-                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base text-gray-100 leading-tight sm:leading-snug drop-shadow-sm">
+                  <p className="mt-0 text-[11px] sm:text-xs md:text-sm text-gray-100 leading-snug drop-shadow-sm">
                     {textAd.description_1}
                   </p>
                 </div>
@@ -55,7 +54,7 @@ export default function FeaturedAds() {
                   href={textAd.link_1 || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-4 sm:ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
+                  className="ml-3 sm:ml-5 shrink-0 bg-primary hover:bg-blue-600 text-white px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
                 >
                   Apply Now
                 </Link>
@@ -63,8 +62,8 @@ export default function FeaturedAds() {
             </div>
           </div>
 
-          {/* ===== Ad 2 ===== */}
-          <div className="relative min-h-[4.5rem] sm:min-h-[5rem] h-auto rounded-lg overflow-hidden md:h-[5rem]">
+          {/* ================= Ad 2 ================= */}
+          <div className="relative min-h-[4rem] sm:min-h-[4.5rem] rounded-lg overflow-hidden">
             <Image
               src="/assets/adbackground.jpg"
               alt={textAd.title_2 || "Featured ad"}
@@ -72,15 +71,15 @@ export default function FeaturedAds() {
               className="object-cover scale-105 blur-[1.5px]"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/45 to-black/30 flex items-center">
-              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2 sm:py-0">
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/45 to-black/30 flex items-center">
+              <div className="flex w-full items-center justify-between px-4 sm:px-5 py-2">
 
                 {/* Text */}
                 <div className="flex-1 text-center">
-                  <h3 className="text-base sm:text-lg md:text-xl font-semibold text-white leading-tight sm:leading-snug drop-shadow-sm">
+                  <h3 className="text-sm sm:text-base md:text-lg font-semibold text-white leading-snug drop-shadow-sm">
                     {textAd.title_2}
                   </h3>
-                  <p className="mt-0.5 sm:mt-1 text-xs sm:text-sm md:text-base text-gray-100 leading-tight sm:leading-snug drop-shadow-sm">
+                  <p className="mt-0 text-[11px] sm:text-xs md:text-sm text-gray-100 leading-snug drop-shadow-sm">
                     {textAd.description_2}
                   </p>
                 </div>
@@ -90,7 +89,7 @@ export default function FeaturedAds() {
                   href={textAd.link_2 || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="ml-4 sm:ml-6 shrink-0 bg-primary hover:bg-blue-600 text-white px-4 sm:px-5 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
+                  className="ml-3 sm:ml-5 shrink-0 bg-primary hover:bg-blue-600 text-white px-3 sm:px-4 py-1.5 rounded-md text-xs sm:text-sm font-medium transition shadow-sm"
                 >
                   Apply Now
                 </Link>

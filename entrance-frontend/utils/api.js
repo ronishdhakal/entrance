@@ -575,3 +575,55 @@ export const fetchPublicQuestionCount = async (sectionId) => {
     return 0
   }
 }
+
+/* =========================
+   SYLLABUS API
+========================= */
+
+
+/**
+ * Fetch syllabus list
+ */
+export const fetchSyllabusList = async () => {
+  try {
+    const response = await fetch(`${API_URL}/syllabus/`, {
+      cache: "no-store",
+    })
+
+    if (!response.ok) {
+      console.error(
+        "Failed to fetch syllabus list:",
+        response.status
+      )
+      return []
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Error fetching syllabus list:", error)
+    return []
+  }
+}
+
+/**
+ * Fetch syllabus detail by slug
+ */
+export const fetchSyllabusBySlug = async (slug) => {
+  if (!slug) return null
+
+  try {
+    const res = await fetch(`${API_URL}/syllabus/${slug}/`, {
+      cache: "no-store",
+    })
+
+    if (!res.ok) {
+      console.error("Syllabus fetch failed:", res.status)
+      return null
+    }
+
+    return await res.json()
+  } catch (err) {
+    console.error("Fetch error:", err.message)
+    return null
+  }
+}
