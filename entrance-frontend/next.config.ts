@@ -19,12 +19,19 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
 
-      // 🔁 Add production backend when deployed
-      // {
-      //   protocol: "https",
-      //   hostname: "api.collegeinfonepal.com",
-      //   pathname: "/media/**",
-      // },
+      // Production media domain
+      {
+        protocol: "https",
+        hostname: "media.collegeinfonepal.com",
+        pathname: "/**",
+      },
+
+      // Production entrance base domain
+      {
+        protocol: "https",
+        hostname: "entrancebase.collegeinfonepal.com",
+        pathname: "/**",
+      },
     ],
   },
 };
