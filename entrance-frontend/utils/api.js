@@ -280,59 +280,69 @@ export const fetchNewsBySlug = async (slug) => {
   }
 }
 
-/* =========================
-   BOOKS
-========================= */
+// ==============================
+// 📚 BOOK APIs
+// ==============================
 
-const normalizeBook = (book) => {
-  if (!book) return null
-
-  return {
-    ...book,
-    images: (book.images || []).map((img) => ({
-      ...img,
-      image: img.image?.startsWith("http") ? img.image : `${API_BASE_URL}${img.image}`,
-    })),
-  }
-}
-
-export const fetchBooks = async () => {
+/**
+ * Fetch list of active books
+ * GET /api/books/
+ */
+export async function fetchBooks(params = {}) {
   try {
-    const response = await fetch(`${API_URL}/books/`, {
-      cache: "no-store",
-    })
+    const query = new URLSearchParams(params).toString()
+    const res = await fetch(
+      `${API_BASE_URL}/books/${query ? `?${query}` : ""}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    )
 
-    if (!response.ok) {
+    if (!res.ok) {
       throw new Error("Failed to fetch books")
     }
 
-    const data = await response.json()
-    return data.map(normalizeBook)
+    return await res.json()
   } catch (error) {
-    console.error("Error fetching books:", error)
+    console.error("fetchBooks error:", error)
     return []
   }
 }
 
-export const fetchBookBySlug = async (slug) => {
+/**
+ * Fetch single book detail by slug
+ * GET /api/books/:slug/
+ */
+export async function fetchBookDetail(slug) {
   if (!slug) return null
 
   try {
-    const response = await fetch(`${API_URL}/books/${slug}/`, {
-      cache: "no-store",
-    })
+    const res = await fetch(
+      `${API_BASE_URL}/books/${slug}/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      }
+    )
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch book")
+    if (!res.ok) {
+      throw new Error("Failed to fetch book detail")
     }
 
-    const data = await response.json()
-    return normalizeBook(data)
+    return await res.json()
   } catch (error) {
-    console.error("Error fetching book:", error)
+    console.error("fetchBookDetail error:", error)
     return null
   }
 }
+
 
 /* =========================
    COURSES

@@ -1,37 +1,37 @@
 import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
-import BookGrid from "@/components/book/book-grid"
-import { fetchBooks } from "@/utils/api"
 
-export const dynamic = "force-dynamic"
+import BookListHeader from "@/components/book/BookListHeader"
+import BookList from "@/components/book/BookList"
 
 export const metadata = {
-  title: "IT Entrance Preparation Books - Entrance Prep by College Info Nepal",
-  description: "Browse our collection of entrance exam preparation books",
+  title: "Entrance Prepration Books | College Info Nepal",
+  description:
+    "Explore curated books and study resources to support your academic journey, exam preparation, and concept building.",
 }
 
-export default async function BooksPage() {
-  const books = (await fetchBooks()) || []
-
+export default function BooksPage() {
   return (
     <>
+      {/* Global Navigation */}
       <Navbar />
 
-      <main className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-foreground mb-2">
-              Entrance Preparation Books
-            </h1>
-            <p className="text-muted-foreground">
-              Explore our collection of entrance exam preparation books
-            </p>
+      <main className="bg-gray-50">
+        {/* Constrained, professional container */}
+        <div className="mx-auto max-w-6xl px-4 py-10">
+          {/* Page Header */}
+          <div className="mb-10">
+            <BookListHeader />
           </div>
 
-          <BookGrid books={books} />
+          {/* Book List */}
+          <section>
+            <BookList />
+          </section>
         </div>
       </main>
 
+      {/* Global Footer */}
       <Footer />
     </>
   )

@@ -1,9 +1,9 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      // Local backend (127.0.0.1)
+      // ✅ Local backend (127.0.0.1)
       {
         protocol: "http",
         hostname: "127.0.0.1",
@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
 
-      // Local backend (localhost)
+      // ✅ Local backend (localhost)
       {
         protocol: "http",
         hostname: "localhost",
@@ -19,14 +19,14 @@ const nextConfig: NextConfig = {
         pathname: "/media/**",
       },
 
-      // Production media domain
+      // ✅ Production media domain
       {
         protocol: "https",
         hostname: "media.collegeinfonepal.com",
         pathname: "/**",
       },
 
-      // Production entrance base domain
+      // ✅ Production entrance base domain
       {
         protocol: "https",
         hostname: "entrancebase.collegeinfonepal.com",
@@ -34,6 +34,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig

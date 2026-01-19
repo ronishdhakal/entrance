@@ -11,7 +11,12 @@ class BookListAPIView(generics.ListAPIView):
     serializer_class = BookSerializer
 
     def get_queryset(self):
-        return Book.objects.filter(is_active=True)
+        return (
+            Book.objects
+            .filter(is_active=True)
+            .prefetch_related("images")
+            .order_by("-created_at")
+        )
 
 
 class BookDetailAPIView(generics.RetrieveAPIView):
@@ -23,4 +28,8 @@ class BookDetailAPIView(generics.RetrieveAPIView):
     lookup_field = "slug"
 
     def get_queryset(self):
-        return Book.objects.filter(is_active=True)
+        return (
+            Book.objects
+            .filter(is_active=True)
+            .prefetch_related("images")
+        )
