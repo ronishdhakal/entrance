@@ -78,7 +78,8 @@ INSTALLED_APPS = [
     "apps.advertisement",
     "apps.inquiry",
     "apps.question",
-    "apps.syllabus"
+    "apps.syllabus",
+    "apps.classes",
 ]
 
 # =========================

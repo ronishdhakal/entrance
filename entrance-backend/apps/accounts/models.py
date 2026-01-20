@@ -34,6 +34,7 @@ class User(AbstractUser):
         ("BIT", "BIT"),
         ("BCA", "BCA"),
         ("CMAT", "CMAT"),
+        ("IoE", "IoE"),
     ]
 
     email = models.EmailField(unique=True)

@@ -637,3 +637,52 @@ export const fetchSyllabusBySlug = async (slug) => {
     return null
   }
 }
+
+
+// ================================
+// Classes APIs
+// ================================
+
+/**
+ * Fetch all active classes (public list)
+ * GET /api/classes/
+ */
+export async function fetchClasses() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/classes/`, {
+      cache: "no-store", // important for SSR freshness
+    })
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch classes")
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("fetchClasses error:", error)
+    return []
+  }
+}
+
+/**
+ * Fetch class detail by slug
+ * GET /api/classes/<slug>/
+ */
+export async function fetchClassDetail(slug) {
+  if (!slug) return null
+
+  try {
+    const res = await fetch(`${API_BASE_URL}/classes/${slug}/`, {
+      cache: "no-store",
+    })
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch class detail")
+    }
+
+    return await res.json()
+  } catch (error) {
+    console.error("fetchClassDetail error:", error)
+    return null
+  }
+}
