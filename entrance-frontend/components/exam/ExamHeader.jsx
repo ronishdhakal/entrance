@@ -1,66 +1,73 @@
 "use client"
 
+import { useState } from "react"
 import { MapPin } from "lucide-react"
+import { X } from "lucide-react"
+
+// Reuse your existing inquiry component
+import ProgramInquiry from "@/components/inquiry/ProgramInquiry"
 
 export default function ExamHeader({ exam }) {
+  const [showInquiry, setShowInquiry] = useState(false)
+
+  if (!exam) return null
+
   return (
-    <div className="py-6 px-3">
-      <div className="max-w-6xl mx-auto">
+    <>
+      <section className="py-6 px-3 border-b">
+        <div className="max-w-6xl mx-auto">
 
-        {/* Top meta row */}
-        <div className="flex items-center gap-3 mb-2">
-          <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-semibold">
-            Active
-          </span>
-
+          {/* Institute / Authority */}
           {exam.institute_name && (
-            <div className="flex items-center text-muted-foreground">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span className="text-sm">
-                {exam.institute_name}
-              </span>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+              <MapPin className="w-4 h-4" />
+              <span>{exam.institute_name}</span>
             </div>
           )}
-        </div>
 
-        {/* Title row */}
-        <div className="flex items-start gap-3 mb-2">
-          <img
-            src="/assets/exam-icon.png"
-            alt="Exam Icon"
-            className="w-10 h-10 object-contain flex-shrink-0 mt-1"
-          />
+          {/* Title */}
+          <div className="flex items-start gap-4 mb-4">
+            <img
+              src="/assets/exam-icon.png"
+              alt=""
+              aria-hidden="true"
+              className="w-10 h-10 object-contain flex-shrink-0 mt-1 opacity-80"
+            />
 
-          <h1 className="text-3xl md:text-4xl font-semibold text-foreground leading-snug">
-            {exam.title}
-          </h1>
-        </div>
+            <h1 className="text-3xl md:text-4xl font-semibold text-foreground leading-snug">
+              {exam.title}
+            </h1>
+          </div>
 
-        {/* Official website */}
-        {exam.link && (
-          <a
-            href={exam.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center text-sm text-primary hover:underline font-medium"
+          {/* ✅ ASK A QUESTION BUTTON */}
+          <button
+            onClick={() => setShowInquiry(true)}
+            className="inline-flex items-center justify-center bg-primary text-white px-6 py-2.5 rounded-md font-medium hover:opacity-90 transition"
           >
-            Official Website
-            <svg
-              className="w-4 h-4 ml-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
+            Ask a Question
+          </button>
+        </div>
+      </section>
+
+      {/* =====================
+          INQUIRY MODAL
+      ===================== */}
+      {showInquiry && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
+          <div className="relative bg-white w-full max-w-lg rounded-xl p-6">
+            <button
+              onClick={() => setShowInquiry(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+              aria-label="Close inquiry"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              />
-            </svg>
-          </a>
-        )}
-      </div>
-    </div>
+              <X size={20} />
+            </button>
+
+            {/* Reusing same inquiry form */}
+            <ProgramInquiry program={exam} />
+          </div>
+        </div>
+      )}
+    </>
   )
 }

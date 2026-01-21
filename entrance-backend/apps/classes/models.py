@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from ckeditor.fields import RichTextField
 
 # Assuming Program model already exists
 from apps.programs.models import Program
@@ -11,6 +12,7 @@ class Class(models.Model):
     # -----------------------------
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True)
+
     program = models.ForeignKey(
         Program,
         on_delete=models.CASCADE,
@@ -71,10 +73,11 @@ class Class(models.Model):
     # -----------------------------
     # Descriptions (Rich Text)
     # -----------------------------
-    top_description = models.TextField(
-        help_text="Rich text content (CKEditor/TinyMCE)"
+    top_description = RichTextField(
+        blank=True,
+        help_text="Main rich text content (CKEditor)"
     )
-    bottom_description = models.TextField(
+    bottom_description = RichTextField(
         blank=True,
         help_text="Additional rich text content"
     )
@@ -109,7 +112,10 @@ class Class(models.Model):
     # -----------------------------
     is_active = models.BooleanField(default=True)
     meta_title = models.CharField(max_length=255, blank=True)
-    meta_description = models.TextField(blank=True)
+    meta_description = RichTextField(
+        blank=True,
+        help_text="SEO description (rich text)"
+    )
 
     # -----------------------------
     # Ordering & Timestamp

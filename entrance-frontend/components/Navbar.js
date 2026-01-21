@@ -100,6 +100,9 @@ export default function Navbar() {
               <Link href="/book" className="text-gray-700 hover:text-primary">
                 Books
               </Link>
+              <Link href="/class" className="text-gray-700 hover:text-primary">
+                Classes
+              </Link>
               <Link href="/college" className="text-gray-700 hover:text-primary">
                 Colleges
               </Link>
@@ -167,6 +170,9 @@ export default function Navbar() {
                 </Link>
                 <Link href="/book" onClick={() => setIsMenuOpen(false)}>
                   Books
+                </Link>
+                <Link href="/class" onClick={() => setIsMenuOpen(false)}>
+                  Classes
                 </Link>
                 <Link href="/college" onClick={() => setIsMenuOpen(false)}>
                   Colleges

@@ -4,6 +4,8 @@ import {
   fetchExams,
   fetchBooks,
   fetchPrograms,
+  fetchSyllabusList,
+  fetchClasses,
 } from "@/utils/api"
 
 export const dynamic = "force-dynamic"
@@ -16,14 +18,26 @@ export default async function sitemap() {
   let exams = []
   let books = []
   let programs = []
+  let syllabus = []
+  let classes = []
 
   try {
-    ;[courses, news, exams, books, programs] = await Promise.all([
+    ;[
+      courses,
+      news,
+      exams,
+      books,
+      programs,
+      syllabus,
+      classes,
+    ] = await Promise.all([
       fetchCourses(),
       fetchNews(),
       fetchExams(),
       fetchBooks(),
       fetchPrograms(),
+      fetchSyllabusList(),
+      fetchClasses(),
     ])
   } catch (error) {
     // ✅ Sitemap must NEVER crash
@@ -39,6 +53,9 @@ export default async function sitemap() {
     "/news",
     "/exam",
     "/book",
+    "/program",
+    "/syllabus",
+    "/class",
   ].map((path) => ({
     url: `${baseUrl}${path}`,
     lastModified: new Date(),
@@ -88,13 +105,35 @@ export default async function sitemap() {
   }))
 
   /* ========================
-     Program Pages (slug only)
+     Program Pages
   ======================== */
   const programPages = (Array.isArray(programs) ? programs : []).map((item) => ({
     url: `${baseUrl}/program/${item.slug}`,
     lastModified: new Date(item.updated_at || item.created_at || Date.now()),
     changeFrequency: "monthly",
     priority: 0.6,
+  }))
+
+  /* ========================
+     Syllabus Pages
+     /syllabus/[slug]
+  ======================== */
+  const syllabusPages = (Array.isArray(syllabus) ? syllabus : []).map((item) => ({
+    url: `${baseUrl}/syllabus/${item.slug}`,
+    lastModified: new Date(item.updated_at || item.created_at || Date.now()),
+    changeFrequency: "monthly",
+    priority: 0.7,
+  }))
+
+  /* ========================
+     Classes Pages
+     /class/[slug]
+  ======================== */
+  const classPages = (Array.isArray(classes) ? classes : []).map((item) => ({
+    url: `${baseUrl}/class/${item.slug}`,
+    lastModified: new Date(item.updated_at || item.created_at || Date.now()),
+    changeFrequency: "weekly",
+    priority: 0.75,
   }))
 
   return [
@@ -104,5 +143,7 @@ export default async function sitemap() {
     ...examPages,
     ...bookPages,
     ...programPages,
+    ...syllabusPages,
+    ...classPages,
   ]
 }
