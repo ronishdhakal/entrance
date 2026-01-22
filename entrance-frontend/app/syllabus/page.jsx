@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 
 export const metadata = {
-  title: "IT Entrance Syllabus | Entrance College Info",
+  title: "IT Entrance Exaxm Syllabus | Entrance College Info",
   description:
     "Browse entrance exam syllabus including subject-wise marks, exam pattern, and university details.",
 }
@@ -21,7 +21,7 @@ export default async function SyllabusListPage() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold">IT Entrance Syllabus</h1>
+          <h1 className="text-3xl font-bold">IT Entrance Exam Syllabus</h1>
           <p className="text-muted-foreground mt-2">
             Explore entrance exam syllabus with detailed exam structure and
             subject-wise marks.

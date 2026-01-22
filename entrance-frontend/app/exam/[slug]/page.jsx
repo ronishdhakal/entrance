@@ -8,6 +8,29 @@ import ExamDetails from "@/components/exam/ExamDetails"
 import ExamInfo from "@/components/exam/ExamInfo"
 import { fetchExamBySlug } from "@/utils/api"
 
+/* ============================
+   Dynamic Metadata
+============================ */
+export async function generateMetadata(props) {
+  const { slug } = await props.params
+  const exam = await fetchExamBySlug(slug)
+
+  if (!exam) {
+    return {
+      title: "Exam Not Found",
+      description:
+        "The exam you are looking for does not exist or is unavailable.",
+    }
+  }
+
+  return {
+    title: exam.meta_title || exam.title,
+    description:
+      exam.meta_description ||
+      `${exam.title} entrance exam details, syllabus, dates, eligibility, and application information.`,
+  }
+}
+
 export default async function ExamDetailPage(props) {
   // ✅ params is a Promise in Next.js 15/16
   const { slug } = await props.params

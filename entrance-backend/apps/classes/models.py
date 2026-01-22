@@ -96,9 +96,9 @@ class Class(models.Model):
     # -----------------------------
     # Page Enhancement Fields
     # -----------------------------
-    highlights = models.TextField(
+    highlights = RichTextField(
         blank=True,
-        help_text="Key highlights / bullet points (optional)"
+        help_text="Key highlights / bullet points (rich text)"
     )
     duration = models.CharField(
         max_length=100,

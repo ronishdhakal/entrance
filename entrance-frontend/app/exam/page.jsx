@@ -6,7 +6,7 @@ import ExamList from "@/components/exam/ExamList"
 import { fetchExams } from "@/utils/api"
 
 export const metadata = {
-  title: "Entrance Exams | College Info Nepal",
+  title: "IT Entrance Exams | College Info Nepal",
   description:
     "Browse all entrance exams for Nepal colleges and universities. Stay updated with exam dates, registration periods, and requirements.",
 }
@@ -23,7 +23,7 @@ export default async function ExamPage() {
         <section className="bg-gradient-to-b from-primary/10 to-background py-10 px-2">
           <div className="max-w-7xl mx-auto text-left">
             <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
-              Entrance Exams in Nepal
+              IT Entrance Exams in Nepal
             </h1>
             <p className="text-lg text-left text-muted-foreground max-w-2xl mx-auto">
               Stay informed about upcoming entrance exams in Nepal. Find exam dates,

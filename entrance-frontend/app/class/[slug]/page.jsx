@@ -6,8 +6,10 @@ import Footer from "@/components/Footer"
 import ClassHeader from "@/components/class/ClassHeader"
 import ClassMeta from "@/components/class/ClassMeta"
 import ClassPricing from "@/components/class/ClassPricing"
-import ClassDescription from "@/components/class/ClassDescription"
 import ClassResources from "@/components/class/ClassResources"
+import ClassHighlights from "@/components/class/ClassHighlights"
+import ClassTopDescription from "@/components/class/ClassTopDescription"
+import ClassBottomDescription from "@/components/class/ClassBottomDescription"
 
 /**
  * SEO Metadata
@@ -36,11 +38,7 @@ export async function generateMetadata(props) {
       title,
       description,
       images: data.featured_image
-        ? [
-            {
-              url: data.featured_image,
-            },
-          ]
+        ? [{ url: data.featured_image }]
         : [],
     },
   }
@@ -50,7 +48,6 @@ export async function generateMetadata(props) {
  * Page
  */
 export default async function ClassDetailPage(props) {
-  // ✅ params is async in new Next.js
   const params = await props.params
   const slug = params.slug
 
@@ -62,33 +59,54 @@ export default async function ClassDetailPage(props) {
 
   return (
     <>
-      {/* Top Navigation */}
+      {/* Navigation */}
       <Navbar />
 
       {/* Main Content */}
       <main className="bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
           {/* Header (H1) */}
-          <div className="mb-10">
+          <div className="mb-8">
             <ClassHeader data={data} />
           </div>
 
-          {/* Content Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Left Content */}
-            <div className="lg:col-span-2 space-y-10">
-              <ClassMeta data={data} />
-              <ClassDescription data={data} />
-              <ClassResources data={data} />
-            </div>
-
-            {/* Right Sidebar */}
-            <aside className="space-y-6">
-              <div className="sticky top-24">
-                <ClassPricing data={data} />
-              </div>
-            </aside>
+          {/* Meta Info */}
+          <div className="mb-8">
+            <ClassMeta data={data} />
           </div>
+
+          {/* Top Description */}
+          {data.top_description && (
+            <section className="mb-10">
+              <ClassTopDescription description={data.top_description} />
+            </section>
+          )}
+
+          {/* Highlights */}
+          {data.highlights && (
+            <section className="mb-10">
+              <ClassHighlights highlights={data.highlights} />
+            </section>
+          )}
+
+          {/* Pricing */}
+          <section className="mb-12">
+            <ClassPricing data={data} />
+          </section>
+
+          {/* Bottom Description */}
+          {data.bottom_description && (
+            <section className="mb-12">
+              <ClassBottomDescription description={data.bottom_description} />
+            </section>
+          )}
+
+          {/* Resources */}
+          <section className="mb-6">
+            <ClassResources data={data} />
+          </section>
+
         </div>
       </main>
 
