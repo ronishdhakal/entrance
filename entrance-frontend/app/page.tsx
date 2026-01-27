@@ -10,9 +10,9 @@ import StatsSection from "@/components/home/StatsSection"
 import CTASection from "@/components/home/CTASection"
 
 export const metadata = {
-  title: "Entrance Prep by College Info Nepal",
+  title: "Free BSc CSIT, BIT, BCA, CMAT Entrance Preparation - Entrance Prep by College Info Nepal",
   description:
-    "Prepare for BSc CSIT, BIT, BBA and other entrance exams with smart mock tests, real exam patterns, practice questions, and expert guidance by College Info Nepal.",
+    "Prepare for BSc CSIT, BIT, BBA and other entrance exams for Free with smart mock tests, real exam patterns, practice questions, and expert guidance by College Info Nepal.",
 
   other: {
     "google-site-verification":

@@ -7,7 +7,7 @@ export default function ProgramHeader({ program }) {
 
         {/* PAGE TITLE (H1) */}
         <h1 className="text-3xl md:text-4xl font-semibold leading-snug mb-2 text-foreground">
-          {program.abbreviation} Entrance Preparation – Old Questions & Mock Tests
+          Free {program.abbreviation} Entrance Preparation – Old Questions & Mock Tests
         </h1>
 
         {/* Program Name (linked if external link exists) */}

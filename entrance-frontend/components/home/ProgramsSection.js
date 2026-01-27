@@ -7,7 +7,7 @@ const programs = [
     title: "BSc CSIT",
     fullName: "Bachelor of Science in Computer Science and IT",
     icon: Calculator,
-    description: "Extensive question bank with Physics, Chemistry, Mathematics, and Computer Science.",
+    description: "Extensive question bank with Physics, Chemistry, Mathematics, and Computer Science for BSc CSIT Entrance Preparation.",
     sections: ["English", "GK", "Physics", "Chemistry", "Math", "Computer"],
     color: "bg-green-500",
     bgColor: "bg-green-50",
@@ -18,7 +18,7 @@ const programs = [
     title: "BIT",
     fullName: "Bachelor of Information Technology",
     icon: Code,
-    description: "Comprehensive mock tests with optional sections for Mathematics and Computer Science.",
+    description: "Comprehensive mock tests with optional sections for Mathematics and Computer Science for BIT Entrance Preparation.",
     sections: ["English", "Physics", "Math/Computer"],
     color: "bg-blue-500",
     bgColor: "bg-blue-50",
@@ -29,7 +29,7 @@ const programs = [
     title: "BCA",
     fullName: "Bachelor of Computer Application",
     icon: BookOpen,
-    description: "Complete practice tests covering all essential topics for BCA entrance examination.",
+    description: "Complete practice tests covering all essential topics for BCA entrance examination for BCA Entrance Preparation.",
     sections: ["English", "GK", "Mathematics", "Computer"],
     color: "bg-purple-500",
     bgColor: "bg-purple-50",
@@ -41,7 +41,7 @@ const programs = [
     title: "CMAT",
     fullName: "Common Management Admission Test",
     icon: Brain,
-    description: "Strategic mock tests for management entrance covering all key sections.",
+    description: "Strategic mock tests for management entrance covering all key sections for CMAT Entrance Preparation.",
     sections: ["General Awareness", "Quantitative", "Logical Reasoning", "English"],
     color: "bg-orange-500",
     bgColor: "bg-orange-50",
@@ -57,7 +57,7 @@ export default function ProgramsSection() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Choose Your Program</h2>
           <p className="text-lg text-gray-600">
-            Select from our comprehensive mock test programs designed specifically for Nepali entrance examinations.
+            Select from our comprehensive mock test programs designed specifically for IT entrance examinations preparation.
           </p>
         </div>
 

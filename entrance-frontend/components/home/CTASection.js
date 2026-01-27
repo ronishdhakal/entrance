@@ -16,7 +16,7 @@ export default function CTASection() {
 
         <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
           Join thousands of students who have improved their scores with our
-          comprehensive mock test platform.
+          comprehensive IT Entrance Preparation Platform.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

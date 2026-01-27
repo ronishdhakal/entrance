@@ -21,7 +21,7 @@ export default function Footer() {
           <div className="space-y-4">
             <Image
               src="/assets/logo.svg"
-              alt="MockTest Logo"
+              alt="Entrance Prep by College Info Nepal Logo"
               width={140}
               height={32}
               className="brightness-0 invert"
