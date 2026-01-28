@@ -65,12 +65,18 @@ class MockTestSerializer(serializers.ModelSerializer):
             "slug",
             "duration",
             "instructions",
+
+            # ✅ NEW FIELDS
+            "is_old_question",
+            "priority",
+
             "is_published",
             "sections",
             "created_at",
             "updated_at",
         )
         read_only_fields = fields
+
 
 
 # =========================

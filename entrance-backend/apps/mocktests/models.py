@@ -12,13 +12,26 @@ class MockTest(models.Model):
     slug = models.SlugField(unique=True)
     duration = models.PositiveIntegerField(help_text="Duration in minutes")
     instructions = models.TextField(blank=True)
+
+    # ✅ NEW: Old Question flag (Yes / No)
+    is_old_question = models.BooleanField(
+        default=False,
+        help_text="Mark if this mock test is based on old questions"
+    )
+
+    # ✅ NEW: Priority for list view ordering
+    priority = models.PositiveIntegerField(
+        default=0,
+        help_text="Lower number = higher priority in list view"
+    )
+
     is_published = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['priority', '-created_at']
 
     def __str__(self):
         return f"{self.program.abbreviation} - {self.title}"
