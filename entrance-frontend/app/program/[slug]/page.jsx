@@ -10,6 +10,7 @@ import Navbar from "@/components/Navbar"
 import Footer from "@/components/Footer"
 import ProgramHeader from "@/components/program/ProgramHeader"
 import ProgramMockTests from "@/components/program/ProgramMockTests"
+import ProgramOldQuestions from "@/components/program/ProgramOldQuestions"
 import { PracticeSections } from "@/components/question/PracticeSections"
 import ProgramInquiry from "@/components/inquiry/ProgramInquiry"
 
@@ -57,7 +58,7 @@ export default function ProgramDetailPage() {
           setMockTests(mockTestsData)
         }
 
-        /* SECTIONS (PUBLIC — NO AUTH) */
+        /* PRACTICE SECTIONS */
         const sectionsData = await fetchPublicSectionsByProgram(programData.id)
         setSections(sectionsData)
       } catch (err) {
@@ -71,7 +72,7 @@ export default function ProgramDetailPage() {
   }, [slug])
 
   const pageTitle = program
-    ? `${program.abbreviation} - Entrance Mock Test, Old Question`
+    ? `${program.abbreviation} - Entrance Mock Test & Old Questions`
     : "Entrance Mock Test - College Info Nepal"
 
   const pageDescription = program
@@ -149,7 +150,12 @@ export default function ProgramDetailPage() {
             </section>
           )}
 
+          {/* MOCK TESTS */}
           <ProgramMockTests mockTests={mockTests} />
+
+          {/* OLD QUESTIONS */}
+          <ProgramOldQuestions mockTests={mockTests} />
+
           <Footer />
         </>
       )}

@@ -4,6 +4,11 @@ import Link from "next/link"
 import { Clock, BookOpen, ArrowRight } from "lucide-react"
 
 export default function ProgramMockTests({ mockTests = [] }) {
+  // ✅ Only NON-old-question mock tests
+  const freshMockTests = mockTests.filter(
+    (test) => test.is_old_question === false
+  )
+
   return (
     <section className="py-2">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,20 +16,20 @@ export default function ProgramMockTests({ mockTests = [] }) {
         {/* Section Header */}
         <div className="mb-8">
           <h2 className="text-2xl md:text-3xl font-semibold mb-1">
-            Available Entrance Mock Test & Old Questions
+            Available Entrance Mock Tests
           </h2>
 
           <p className="text-sm md:text-base text-muted-foreground">
-            {mockTests.length > 0
-              ? `Choose from ${mockTests.length} test${
-                  mockTests.length > 1 ? "s" : ""
+            {freshMockTests.length > 0
+              ? `Choose from ${freshMockTests.length} test${
+                  freshMockTests.length > 1 ? "s" : ""
                 } prepared based on real entrance exam patterns`
-              : "No entrance mock tests or old questions available yet"}
+              : "No entrance mock tests available yet"}
           </p>
         </div>
 
         {/* Empty State */}
-        {mockTests.length === 0 ? (
+        {freshMockTests.length === 0 ? (
           <div className="text-center py-12 border rounded-lg bg-muted/40">
             <BookOpen className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
             <p className="text-base font-medium text-muted-foreground">
@@ -35,9 +40,8 @@ export default function ProgramMockTests({ mockTests = [] }) {
             </p>
           </div>
         ) : (
-          /* Test Cards */
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {mockTests.map((test) => (
+            {freshMockTests.map((test) => (
               <div
                 key={test.id}
                 className="bg-card border border-border rounded-lg p-5 hover:shadow-md transition-shadow"
