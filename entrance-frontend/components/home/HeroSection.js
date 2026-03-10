@@ -10,7 +10,7 @@ export default function HeroSection() {
           <div className="space-y-8">
             <div className="inline-block">
               <span className="bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-semibold">
-                🎯 Nepal&apos;s #1 Free IT Entrance Prepration Platform
+                🎯 Nepal&apos;s #1 Free IT Entrance Preparation Platform
               </span>
             </div>
 
@@ -19,7 +19,7 @@ export default function HeroSection() {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
-              Practice with authentic mock tests for Entrance Prepration of BSc CSIT, BIT, BCA, and CMAT for FREE. Get real-time results, detailed
+              Practice with authentic mock tests for Entrance Preparation of BSc CSIT, BIT, BCA, and CMAT for FREE. Get real-time results, detailed
               analysis, and improve your performance.
             </p>
 
