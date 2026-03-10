@@ -1,20 +1,130 @@
+# =========================
+
 # Python
+
+# =========================
+
+**pycache**/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+
 venv/
-__pycache__/
-*.pyc
-db.sqlite3
+env/
+ENV/
+
+# =========================
 
 # Django
-.env
-.env.local
 
-# Node
+# =========================
+
+db.sqlite3
+*.log
+local_settings.py
+
+# Django Media & Static
+
+media/
+staticfiles/
+
+# Environment variables
+
+.env
+.env.*
+!.env.example
+
+# =========================
+
+# Node / Next.js
+
+# =========================
+
 node_modules/
 .next/
+out/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# OS
+# Next.js build files
+
+.next/
+.next/cache/
+.next/static/
+
+# =========================
+
+# IDE / Editor
+
+# =========================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+
+# OS Files
+
+# =========================
+
 .DS_Store
 Thumbs.db
 
-# .env
-.env
+# =========================
+
+# Logs
+
+# =========================
+
+logs/
+*.log
+
+# =========================
+
+# Docker
+
+# =========================
+
+docker-compose.override.yml
+
+# =========================
+
+# Testing
+
+# =========================
+
+.coverage
+htmlcov/
+.pytest_cache/
+
+# =========================
+
+# Misc
+
+# =========================
+
+*.bak
+*.tmp
+*.temp

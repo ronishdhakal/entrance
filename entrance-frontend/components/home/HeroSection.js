@@ -15,7 +15,7 @@ export default function HeroSection() {
             </div>
 
             <h1 className="text-3xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-              Free BSc CSIT, BIT, BCA, CMAT <span className="text-primary">Entrance Prepration</span>
+              Free BSc CSIT, BIT, BCA, CMAT <span className="text-primary">Entrance Preparation</span>
             </h1>
 
             <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
