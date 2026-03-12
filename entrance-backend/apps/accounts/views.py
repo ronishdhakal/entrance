@@ -135,7 +135,7 @@ class ResetPasswordView(APIView):
 
         if not all([email, otp, new_password]):
             return Response(
-                {"detail": "All fields are required"},
+                {"detail": "All fields are required. Enter all fields"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
