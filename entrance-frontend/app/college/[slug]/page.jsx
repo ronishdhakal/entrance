@@ -24,14 +24,42 @@ export async function generateMetadata({ params }) {
     ? course.top_description.replace(/<[^>]*>/g, "").substring(0, 160)
     : `Find the best colleges offering ${course.title} in Nepal.`
 
+  const url = `https://entrance.collegeinfonepal.com/college/${slug}`
+
   return {
     title,
     description,
-    keywords: `${course.title} colleges Nepal, ${course.abbreviation || course.title} Nepal`,
+    keywords: [
+      `${course.title} colleges Nepal`,
+      `best ${course.abbreviation || course.title} colleges`,
+      `${course.abbreviation || course.title} admission Nepal`,
+      `${course.title} entrance exam`,
+      "IT colleges Nepal",
+      "College Info Nepal",
+    ],
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description,
+      url,
+      siteName: "Entrance Prep by College Info Nepal",
+      images: [
+        {
+          url: "/assets/social.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${title} – College Info Nepal`,
+        },
+      ],
       type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/assets/social.jpg"],
     },
   }
 }
@@ -55,8 +83,25 @@ export default async function CourseCollegePage({ params }) {
     ? rawColleges
     : rawColleges?.results || []
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: `Best ${course.abbreviation || course.title} Colleges in Nepal`,
+    description: `Find the best colleges offering ${course.title} in Nepal.`,
+    url: `https://entrance.collegeinfonepal.com/college/${slug}`,
+    provider: {
+      "@type": "Organization",
+      name: "College Info Nepal",
+      url: "https://entrance.collegeinfonepal.com",
+    },
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">

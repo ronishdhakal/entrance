@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation"
 import { fetchSyllabusBySlug } from "@/utils/api"
 
 // Layout components
@@ -25,9 +26,48 @@ export async function generateMetadata({ params }) {
     }
   }
 
+  const title = `${syllabus.title} Entrance Exam Syllabus`
+  const description =
+    `Complete syllabus for ${syllabus.title} entrance exam` +
+    (syllabus.university ? ` – ${syllabus.university}.` : ".") +
+    " Subject-wise marks, exam pattern, and preparation guide."
+  const url = `https://entrance.collegeinfonepal.com/syllabus/${slug}`
+
   return {
-    title: `${syllabus.title} | Entrance Syllabus`,
-    description: syllabus.university,
+    title,
+    description,
+    keywords: [
+      `${syllabus.title} syllabus`,
+      `${syllabus.title} entrance exam syllabus`,
+      `${syllabus.title} subject-wise marks`,
+      `${syllabus.title} exam pattern`,
+      "entrance exam syllabus Nepal",
+      "College Info Nepal",
+    ],
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Entrance Prep by College Info Nepal",
+      images: [
+        {
+          url: "/assets/social.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${title} – College Info Nepal`,
+        },
+      ],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/assets/social.jpg"],
+    },
   }
 }
 
@@ -38,25 +78,27 @@ export default async function SyllabusDetailPage({ params }) {
   const { slug } = await params
   const syllabus = await fetchSyllabusBySlug(slug)
 
-  if (!syllabus) {
-    return (
-      <>
-        <Navbar />
+  if (!syllabus) notFound()
 
-        <div className="max-w-7xl mx-auto px-4 py-20 text-center">
-          <h1 className="text-2xl font-bold">Syllabus not found</h1>
-          <p className="text-muted-foreground mt-2">
-            The requested syllabus does not exist.
-          </p>
-        </div>
-
-        <Footer />
-      </>
-    )
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${syllabus.title} Entrance Exam Syllabus`,
+    description: `Complete syllabus for ${syllabus.title} entrance exam including subject-wise marks and exam pattern.`,
+    url: `https://entrance.collegeinfonepal.com/syllabus/${slug}`,
+    publisher: {
+      "@type": "Organization",
+      name: "College Info Nepal",
+      url: "https://entrance.collegeinfonepal.com",
+    },
   }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       <div className="max-w-7xl mx-auto px-4 py-8 space-y-5">

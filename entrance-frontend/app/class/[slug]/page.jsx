@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation"
 import { fetchClassDetail } from "@/utils/api"
 
 import Navbar from "@/components/Navbar"
@@ -29,17 +30,36 @@ export async function generateMetadata(props) {
   const title = data.meta_title || data.title
   const description =
     data.meta_description ||
-    `Join ${data.title} entrance preparation class. Available online and physical classes with expert guidance.`
+    `Join ${data.title} entrance preparation class. Available online and in-person with expert guidance.`
+  const url = `https://entrance.collegeinfonepal.com/class/${slug}`
+  const image = data.featured_image || "/assets/social.jpg"
 
   return {
     title,
     description,
+    keywords: [
+      `${data.title}`,
+      `${data.title} entrance class`,
+      "entrance preparation class Nepal",
+      "online entrance class Nepal",
+      "College Info Nepal",
+    ],
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title,
       description,
-      images: data.featured_image
-        ? [{ url: data.featured_image }]
-        : [],
+      url,
+      siteName: "Entrance Prep by College Info Nepal",
+      images: [{ url: image, width: 1200, height: 630, alt: title }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
     },
   }
 }
@@ -53,12 +73,30 @@ export default async function ClassDetailPage(props) {
 
   const data = await fetchClassDetail(slug)
 
-  if (!data) {
-    return null
+  if (!data) notFound()
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    name: data.title,
+    description:
+      data.meta_description ||
+      `Entrance preparation class for ${data.title} available online and in-person.`,
+    url: `https://entrance.collegeinfonepal.com/class/${slug}`,
+    provider: {
+      "@type": "Organization",
+      name: "College Info Nepal",
+      url: "https://entrance.collegeinfonepal.com",
+    },
+    ...(data.featured_image && { image: data.featured_image }),
   }
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Navigation */}
       <Navbar />
 

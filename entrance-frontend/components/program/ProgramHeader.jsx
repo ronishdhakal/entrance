@@ -1,5 +1,3 @@
-"use client"
-
 export default function ProgramHeader({ program }) {
   return (
     <section className="pt-6 pb-8">

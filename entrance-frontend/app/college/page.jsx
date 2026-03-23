@@ -5,16 +5,44 @@ import CollegeListWithPagination from "@/components/college/CollegeListWithPagin
 import { fetchColleges, fetchCourses } from "@/utils/api"
 
 export const metadata = {
-  title: "Top IT Colleges in Nepal | Find the Best College for Your Future",
+  title: "Top IT Colleges in Nepal",
   description:
-    "Explore the comprehensive list of top IT colleges in Nepal. Find detailed information about courses, facilities, and admissions for top colleges across Nepal.",
-  keywords:
-    "colleges in Nepal, best colleges Nepal, Nepal education, college admissions Nepal",
+    "Explore the best IT colleges in Nepal. Compare courses, universities, and admissions across hundreds of colleges affiliated with TU, PU, and other institutions.",
+  keywords: [
+    "IT colleges in Nepal",
+    "best IT colleges Nepal",
+    "BSc CSIT colleges",
+    "BIT colleges Nepal",
+    "BCA colleges Nepal",
+    "college admissions Nepal",
+    "tribhuvan university IT colleges",
+    "pokhara university IT colleges",
+  ],
+  alternates: {
+    canonical: "https://entrance.collegeinfonepal.com/college",
+  },
   openGraph: {
-    title: "Top IT Colleges in Nepal | Find the Best College for Your Future",
+    title: "Top IT Colleges in Nepal",
     description:
-      "Explore the comprehensive list of Top IT colleges in Nepal. Find detailed information about courses, facilities, and admissions.",
+      "Explore the best IT colleges in Nepal. Compare courses, universities, and admissions across hundreds of colleges.",
+    url: "https://entrance.collegeinfonepal.com/college",
+    siteName: "Entrance Prep by College Info Nepal",
+    images: [
+      {
+        url: "/assets/social.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Top IT Colleges in Nepal – College Info Nepal",
+      },
+    ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Top IT Colleges in Nepal",
+    description:
+      "Explore the best IT colleges in Nepal. Compare courses, universities, and admissions.",
+    images: ["/assets/social.jpg"],
   },
 }
 
@@ -24,8 +52,26 @@ export default async function CollegePage() {
     fetchCourses(),
   ])
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Top IT Colleges in Nepal",
+    description:
+      "A comprehensive list of the best IT colleges in Nepal, covering BSc CSIT, BIT, BCA and more.",
+    url: "https://entrance.collegeinfonepal.com/college",
+    provider: {
+      "@type": "Organization",
+      name: "College Info Nepal",
+      url: "https://entrance.collegeinfonepal.com",
+    },
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Navbar />
 
       <main className="min-h-screen bg-gray-50">
